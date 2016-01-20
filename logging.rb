@@ -1,6 +1,6 @@
 require 'logging'
 # here we setup a color scheme called 'bright'
-# kma
+
 #Logging.caller_tracing=true
 Logging.init :debug, :info, :warn, :error, :fatal, :always
 
