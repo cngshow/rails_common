@@ -1,5 +1,5 @@
 require 'logging'
-
+#testing a checkin!!!!
 # here we setup a color scheme called 'bright'
 
 #Logging.caller_tracing=true
