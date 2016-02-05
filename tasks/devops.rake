@@ -1,4 +1,6 @@
+require 'warbler'
 Rake::TaskManager.record_task_metadata = true
+
 #set GLASSFISH_ROOT=C:\work\ETS\glassfish
 #this is also the context root
 #set RAILS_RELATIVE_URL_ROOT=/ets_tooling
@@ -16,7 +18,7 @@ namespace :devops do
   # this method takes a camel cased word and changes it to snake case
   # Example: EtsTooling -> ets_tooling
   #
-  def underscore(camel_cased_word)
+  def to_snake_case(camel_cased_word)
     camel_cased_word.to_s.gsub(/::/, '/').
         gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
         gsub(/([a-z\d])([A-Z])/,'\1_\2').
@@ -24,7 +26,7 @@ namespace :devops do
         downcase
   end
 
-  default_name = underscore(Rails.application.class.parent)
+  default_name = to_snake_case(Rails.application.class.parent)
   default_war = "#{default_name}.war"
   context = env('RAILS_RELATIVE_URL_ROOT',"/#{default_name}")
   ENV['RAILS_RELATIVE_URL_ROOT'] = env('RAILS_RELATIVE_URL_ROOT',"/#{default_name}")
@@ -52,7 +54,10 @@ namespace :devops do
     p task.comment
     Rake::Task['devops:bundle'].invoke
     Rake::Task['devops:compile_assets'].invoke
-    sh "warble"
+   # Rake::Task['devops:create_version'].invoke
+    #sh "warble"
+    Warbler::Task.new
+    Rake::Task['war'].invoke
   end
 
   desc "Compile assets"
@@ -86,5 +91,18 @@ namespace :devops do
     puts task.comment
     sh "#{ENV['GLASSFISH_ROOT']}/glassfish4/bin/asadmin undeploy #{default_name}"
   end
+
+
+  # task :create_version do
+  #   desc "create ETS VERSION.  Use MAJOR_VERSION, MINOR_VERSION, BUILD_VERSION to override defaults"
+  #   version_file = "#{Rails.root}/config/initializers/version2.rb"
+  #   major = ENV["MAJOR_VERSION"] || ETS_VERSION.first
+  #   minor = ENV["MINOR_VERSION"] || ETS_VERSION[1]
+  #   build = ENV["BUILD_VERSION"] || `git describe --always --tags`
+  #   version_string = "ETS_VERSION = #{[major.to_s, minor.to_s, build.strip]}\n"
+  #   File.open(version_file, "w") {|f| f.print(version_string)}
+  #   $maven_vs = major + "." + minor + "." + build
+  #   $maven_vs.chomp!
+  # end
 
 end
