@@ -1,6 +1,7 @@
 require 'warbler'
+require './lib/ets_common/util/helpers'
 Rake::TaskManager.record_task_metadata = true
-
+include ETSUtilities
 #set GLASSFISH_ROOT=C:\work\ETS\glassfish
 #this is also the context root
 #set RAILS_RELATIVE_URL_ROOT=/ets_tooling
@@ -14,17 +15,6 @@ namespace :devops do
     ENV[env_var].nil? ? default : ENV[env_var]
   end
 
-  ##
-  # this method takes a camel cased word and changes it to snake case
-  # Example: EtsTooling -> ets_tooling
-  #
-  def to_snake_case(camel_cased_word)
-    camel_cased_word.to_s.gsub(/::/, '/').
-        gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-        gsub(/([a-z\d])([A-Z])/,'\1_\2').
-        tr("-", "_").
-        downcase
-  end
 
   default_name = to_snake_case(Rails.application.class.parent)
   default_war = "#{default_name}.war"
