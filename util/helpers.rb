@@ -46,6 +46,10 @@ module ETSUtilities
 
   end
 
+  ##
+  # Convert the URL to a string for use with the json_to_yaml_file method call
+  # @param url - the URL path to convert to a string with underscores
+  # @return - the filename based on the URL passed
   def url_to_path_string(url)
     begin
       path = URI(url).path.gsub('/','_')
