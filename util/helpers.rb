@@ -32,6 +32,10 @@ module ETSUtilities
         downcase
   end
 
+  ##
+  # writes the json data to a tmp file based on the filename passed
+  # @param json - the JSON data to write out
+  # @param file_name - the filename to write out to the /tmp directory
   def json_to_yaml_file(json, file_name)
     if Rails.env.development?
       File.write("#{TMP_FILE_PREFIX}#{file_name}" + YML_EXT,json.to_yaml)
