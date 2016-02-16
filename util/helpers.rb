@@ -18,6 +18,8 @@ Copyright Notice
 =end
 require 'uri'
 module ETSUtilities
+  TMP_FILE_PREFIX = "./tmp/"
+  YML_EXT = ".yml"
   ##
   # this method takes a camel cased word and changes it to snake case
   # Example: EtsTooling -> ets_tooling
@@ -31,12 +33,11 @@ module ETSUtilities
   end
 
   def json_to_yaml_file(json, file_name)
-    file_prefix = "./tmp/"
     if Rails.env.development?
-      File.write("#{file_prefix}#{file_name}.yml",json.to_yaml)
-      $log.debug("Writing yaml file #{file_prefix}#{file_name}.yml.")
+      File.write("#{TMP_FILE_PREFIX}#{file_name}" + YML_EXT,json.to_yaml)
+      $log.debug("Writing yaml file #{TMP_FILE_PREFIX}#{file_name}.yml.")
     else
-      $log.debug("Not writing yaml file #{file_prefix}#{file_name}.yml. Rails.env = #{Rails.env}")
+      $log.debug("Not writing yaml file #{TMP_FILE_PREFIX}#{file_name}.yml. Rails.env = #{Rails.env}")
     end
 
   end
