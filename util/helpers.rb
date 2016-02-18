@@ -65,8 +65,8 @@ module ETSUtilities
 end
 
 module Kernel
-  def boolean(boolean_string:)
-    string = string.to_s
+  def boolean(boolean_string)
+    string = boolean_string.to_s
     return true if string =~ /^true$/i
     return false if string.empty? || string =~ /^false$/i
     return true if string.eql?('1')
@@ -75,3 +75,4 @@ module Kernel
   end
 
 end
+#load('./lib/ets_common/util/helpers.rb')
