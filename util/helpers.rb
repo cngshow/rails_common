@@ -63,3 +63,15 @@ module ETSUtilities
   end
 
 end
+
+module Kernel
+  def boolean(boolean_string:)
+    string = string.to_s
+    return true if string =~ /^true$/i
+    return false if string.empty? || string =~ /^false$/i
+    return true if string.eql?('1')
+    return false if string.eql?('0')
+    raise ArgumentError.new("invalid value for Boolean: \"#{string}\"")
+  end
+
+end
