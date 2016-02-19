@@ -51,7 +51,10 @@ module ETSUtilities
   # @param url - the URL path to convert to a string with underscores
   # @return - the filename based on the URL passed
   def url_to_path_string(url)
+    url = url.clone
     begin
+      url.gsub!('{','') #reduce paths like http://www.google.com/foo/{id}/faa to http://www.google.com/foo/id/faa
+      url.gsub!('}','') #reduce paths like http://www.google.com/foo/{id}/faa to http://www.google.com/foo/id/faa
       path = URI(url).path.gsub('/','_')
       path = "no_path" if path.empty?
       return path
