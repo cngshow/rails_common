@@ -38,7 +38,8 @@ module ETSUtilities
   # @param file_name - the filename to write out to the /tmp directory
   def json_to_yaml_file(json, file_name)
     if Rails.env.development?
-      File.write("#{TMP_FILE_PREFIX}#{file_name}" + YML_EXT,json.to_yaml)
+      prefix = "#Fixture created on " + Time.now.strftime("%F %H:%M:%S") + "\n"
+      File.write("#{TMP_FILE_PREFIX}#{file_name}" + YML_EXT,prefix + json.to_yaml)
       $log.debug("Writing yaml file #{TMP_FILE_PREFIX}#{file_name}.yml.")
     else
       $log.debug("Not writing yaml file #{TMP_FILE_PREFIX}#{file_name}.yml. Rails.env = #{Rails.env}")
