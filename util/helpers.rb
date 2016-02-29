@@ -18,8 +18,8 @@ Copyright Notice
 =end
 require 'uri'
 module ETSUtilities
-  TMP_FILE_PREFIX = "./tmp/"
-  YML_EXT = ".yml"
+  TMP_FILE_PREFIX = './tmp/'
+  YML_EXT = '.yml'
   ##
   # this method takes a camel cased word and changes it to snake case
   # Example: EtsTooling -> ets_tooling
@@ -28,7 +28,7 @@ module ETSUtilities
     camel_cased_word.to_s.gsub(/::/, '/').
         gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2').
         gsub(/([a-z\d])([A-Z])/, '\1_\2').
-        tr("-", "_").
+        tr('-', '_').
         downcase
   end
 
@@ -38,7 +38,7 @@ module ETSUtilities
   # @param file_name - the filename to write out to the /tmp directory
   def json_to_yaml_file(json, file_name)
     if Rails.env.development?
-      prefix = "#Fixture created on " + Time.now.strftime("%F %H:%M:%S") + "\n"
+      prefix = '#Fixture created on ' + Time.now.strftime('%F %H:%M:%S') + "\n"
       File.write("#{TMP_FILE_PREFIX}#{file_name}" + YML_EXT,prefix + json.to_yaml)
       $log.debug("Writing yaml file #{TMP_FILE_PREFIX}#{file_name}.yml.")
     else
@@ -57,13 +57,13 @@ module ETSUtilities
       url.gsub!('{','') #reduce paths like http://www.google.com/foo/{id}/faa to http://www.google.com/foo/id/faa
       url.gsub!('}','') #reduce paths like http://www.google.com/foo/{id}/faa to http://www.google.com/foo/id/faa
       path = URI(url).path.gsub('/','_')
-      path = "no_path" if path.empty?
+      path = 'no_path' if path.empty?
       return path
     rescue => ex
-      $log.error("An invalid url was given!")
+      $log.error('An invalid url was given!')
       $log.error(ex)
     end
-    "bad_url"
+    'bad_url'
   end
 
 end
