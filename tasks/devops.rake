@@ -11,16 +11,16 @@ include ETSUtilities
 #http://localhost:4848/
 
 namespace :devops do
-  def env(env_var,default)
+  def env(env_var, default)
     ENV[env_var].nil? ? default : ENV[env_var]
   end
 
 
   default_name = to_snake_case(Rails.application.class.parent)
   default_war = "#{default_name}.war"
-  context = env('RAILS_RELATIVE_URL_ROOT',"/#{default_name}")
-  ENV['RAILS_RELATIVE_URL_ROOT'] = env('RAILS_RELATIVE_URL_ROOT',"/#{default_name}")
-  ENV['RAILS_ENV'] = env('RAILS_ENV','test')
+  context = env('RAILS_RELATIVE_URL_ROOT', "/#{default_name}")
+  ENV['RAILS_RELATIVE_URL_ROOT'] = env('RAILS_RELATIVE_URL_ROOT', "/#{default_name}")
+  ENV['RAILS_ENV'] = env('RAILS_ENV', 'test')
   domain = env('GLASSFISH_DOMAIN', 'domain1')
 
 
@@ -42,10 +42,11 @@ namespace :devops do
   desc "Build war file"
   task :build_war do |task|
     p task.comment
-    Rake::Task['devops:bundle'].invoke
+    #Rake::Task['devops:bundle'].invoke#maven's automated build will do this for us
     Rake::Task['devops:compile_assets'].invoke
-   # Rake::Task['devops:create_version'].invoke
+    # Rake::Task['devops:create_version'].invoke
     #sh "warble"
+    Dir.mkdir(ETSUtilities::MAVEN_TARGET_DIRECTORY) unless File.exists?(ETSUtilities::MAVEN_TARGET_DIRECTORY)
     Warbler::Task.new
     Rake::Task['war'].invoke
   end

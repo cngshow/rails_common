@@ -20,6 +20,7 @@ require 'uri'
 module ETSUtilities
   TMP_FILE_PREFIX = './tmp/'
   YML_EXT = '.yml'
+  MAVEN_TARGET_DIRECTORY = "./target"
   ##
   # this method takes a camel cased word and changes it to snake case
   # Example: EtsTooling -> ets_tooling
