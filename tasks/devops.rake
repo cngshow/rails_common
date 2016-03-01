@@ -51,14 +51,6 @@ namespace :devops do
     Rake::Task['war'].invoke
   end
 
-  desc "Build war file no bundle"
-  task :build_war_only do |task|
-    p task.comment
-    Rake::Task['devops:compile_assets'].invoke
-    Warbler::Task.new
-    Rake::Task['war'].invoke
-  end
-
   desc "Compile assets"
   task :compile_assets do |task|
     p task.comment
