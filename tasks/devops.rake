@@ -50,7 +50,7 @@ namespace :devops do
     Warbler::Task.new
     Rake::Task['war'].invoke
   end
-  #test fjfjfjfpjgwesjgsjsgjgpjgpjgrpjgpjgpjgpjgjgpjgpij
+
   desc "Build war file no bundle"
   task :build_war_only do |task|
     p task.comment
