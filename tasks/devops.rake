@@ -24,7 +24,7 @@ namespace :devops do
   domain = env('GLASSFISH_DOMAIN', 'domain1')
 
 
-  desc "Start up glassfish"
+  desc 'Start up glassfish'
   task :glass_start do |task|
     p task.comment
     Bundler.with_clean_env do
@@ -33,13 +33,13 @@ namespace :devops do
     end
   end
 
-  desc "Stop glassfish"
+  desc 'Stop glassfish'
   task :glass_stop do |task|
     p task.comment
     sh "#{ENV['GLASSFISH_ROOT']}/glassfish4/bin/asadmin stop-domain #{domain}"
   end
 
-  desc "Build war file"
+  desc 'Build war file'
   task :build_war do |task|
     p task.comment
     #Rake::Task['devops:bundle'].invoke#maven's automated build will do this for us
@@ -51,33 +51,33 @@ namespace :devops do
     Rake::Task['war'].invoke
   end
 
-  desc "Compile assets"
+  desc 'Compile assets'
   task :compile_assets do |task|
     p task.comment
     Rake::Task['assets:clobber'].invoke
     Rake::Task['assets:precompile'].invoke
   end
 
-  desc "Install bundle"
+  desc 'Install bundle'
   task :bundle do |task|
     p task.comment
-    sh "bundle install"
+    sh 'bundle install'
   end
 
-  desc "Deploy ets_tooling rails to glassfish"
+  desc 'Deploy ets_tooling rails to glassfish'
   task :deploy do |task|
     p task.comment
     Rake::Task['devops:build_war'].invoke
     sh "#{ENV['GLASSFISH_ROOT']}/glassfish4/bin/asadmin deploy --force true --contextroot #{context} #{default_war}"
   end
 
-  desc "List glassfish applications"
+  desc 'List glassfish applications'
   task :list_web_apps do |task|
     p task.comment
     sh "#{ENV['GLASSFISH_ROOT']}/glassfish4/bin/asadmin list-applications --type web"
   end
 
-  desc "Undeploy ets_tooling rails from glassfish"
+  desc 'Undeploy ets_tooling rails from glassfish'
   task :undeploy do |task|
     puts task.comment
     sh "#{ENV['GLASSFISH_ROOT']}/glassfish4/bin/asadmin undeploy #{default_name}"
