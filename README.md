@@ -15,4 +15,4 @@ To pull the latest code do the following:
 git reset .
 ```
 
-You should now see an ets_common directory under the lib directory.
+You should now see an ets_common directory under the lib directory. 
