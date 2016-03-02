@@ -16,5 +16,3 @@ git reset .
 ```
 
 You should now see an ets_common directory under the lib directory.
- 
-test
