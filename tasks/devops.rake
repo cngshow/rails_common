@@ -1,5 +1,7 @@
 require 'warbler'
 require './lib/ets_common/util/helpers'
+require 'ci/reporter/rake/test_unit'
+require 'ci/reporter/rake/test_unit_loader'
 Rake::TaskManager.record_task_metadata = true
 include ETSUtilities
 #set GLASSFISH_ROOT=C:\work\ETS\glassfish
@@ -39,14 +41,18 @@ namespace :devops do
     sh "#{ENV['GLASSFISH_ROOT']}/glassfish4/bin/asadmin stop-domain #{domain}"
   end
 
+  desc 'build maven\'s target folder if needed'
+  task :maven_target do |task|
+    Dir.mkdir(ETSUtilities::MAVEN_TARGET_DIRECTORY) unless File.exists?(ETSUtilities::MAVEN_TARGET_DIRECTORY)
+  end
+
   desc 'Build war file'
   task :build_war do |task|
     p task.comment
-    #Rake::Task['devops:bundle'].invoke#maven's automated build will do this for us
+    Rake::Task['devops:maven_target'].invoke
     Rake::Task['devops:compile_assets'].invoke
     # Rake::Task['devops:create_version'].invoke
     #sh "warble"
-    Dir.mkdir(ETSUtilities::MAVEN_TARGET_DIRECTORY) unless File.exists?(ETSUtilities::MAVEN_TARGET_DIRECTORY)
     Warbler::Task.new
     Rake::Task['war'].invoke
   end
@@ -95,5 +101,11 @@ namespace :devops do
   #   $maven_vs = major + "." + minor + "." + build
   #   $maven_vs.chomp!
   # end
+  task :isaac_rest_test do
+    ENV['CI_REPORTS'] = ETSUtilities::MAVEN_TARGET_DIRECTORY + '/reports'
+    ['devops:maven_target', 'ci:setup:testunit', 'test:units'].each do |t|
+      Rake::Task[t].invoke
+    end
+  end
 
 end
