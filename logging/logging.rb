@@ -55,11 +55,11 @@ begin
 # the level will be colored differently for each message
 #
   unless ( File.basename($0) == 'rake')
-    $log.always "Logging started!"
+    $log.always 'Logging started!'
   end
 rescue => ex
-  warn "Logger failed to initialize.  Reason is " + ex.to_s
+  warn "Logger failed to initialize.  Reason is #{ex.to_s}"
   warn ex.backtrace.join("\n")
-  warn "Shutting down the ETS web server!"
+  warn 'Shutting down the ETS web server!'
   java.lang.System.exit(1)
 end
