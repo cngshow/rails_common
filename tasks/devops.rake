@@ -6,7 +6,7 @@ Rake::TaskManager.record_task_metadata = true
 include ETSUtilities
 #set GLASSFISH_ROOT=C:\work\ETS\glassfish
 #this is also the context root
-#set RAILS_RELATIVE_URL_ROOT=/ets_tooling
+#set RAILS_RELATIVE_URL_ROOT=/rails_komet
 #domain 1 is the default if is this is unset
 #set GLASSFISH_DOMAIN=domain1
 #glassfish console:
@@ -70,7 +70,7 @@ namespace :devops do
     sh 'bundle install'
   end
 
-  desc 'Deploy ets_tooling rails to glassfish'
+  desc 'Deploy rails_komet rails to glassfish'
   task :deploy do |task|
     p task.comment
     Rake::Task['devops:build_war'].invoke
@@ -83,7 +83,7 @@ namespace :devops do
     sh "#{ENV['GLASSFISH_ROOT']}/glassfish4/bin/asadmin list-applications --type web"
   end
 
-  desc 'Undeploy ets_tooling rails from glassfish'
+  desc 'Undeploy rails_komet rails from glassfish'
   task :undeploy do |task|
     puts task.comment
     sh "#{ENV['GLASSFISH_ROOT']}/glassfish4/bin/asadmin undeploy #{default_name}"
