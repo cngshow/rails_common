@@ -80,4 +80,4 @@ module Kernel
   end
 
 end
-#load('./lib/ets_common/util/helpers.rb')
+#load('./lib/rails_common/util/helpers.rb')
