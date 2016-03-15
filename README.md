@@ -7,7 +7,7 @@ To pull the latest code do the following:
 <ol>
 <li>VCS -> Update Project - from within RubyMine</li>
 <li>open a terminal and navigate to rails_komet/lib</li>
-<li>git submodule add https://github.com/VA-CTT/ets_common</li>
+<li>git submodule add https://github.com/VA-CTT/rails_common</li>
 <li>run git reset from within the lib/ets_common directory</li>
 </ol>
 
