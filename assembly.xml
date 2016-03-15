@@ -12,7 +12,7 @@
 				<include>tasks/**/*</include>
 				<include>util/**/*</include>
 			</includes>
-			<outputDirectory>/ets_common/</outputDirectory>
+			<outputDirectory>/rails_common/</outputDirectory>
 		</fileSet>
 	</fileSets>
 	<includeBaseDirectory>false</includeBaseDirectory>
