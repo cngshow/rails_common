@@ -6,7 +6,7 @@
 	<version>1.0-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
-
+<!-- tim was here -->
 	<name>Common Rails Code</name>
 
 	<scm>
