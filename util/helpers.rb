@@ -17,13 +17,13 @@ Copyright Notice
  limitations under the License.
 =end
 require 'uri'
-module ETSUtilities
+module KOMETUtilities
   TMP_FILE_PREFIX = './tmp/'
   YML_EXT = '.yml'
   MAVEN_TARGET_DIRECTORY = "./target"
   ##
   # this method takes a camel cased word and changes it to snake case
-  # Example: EtsTooling -> rails_komet
+  # Example: KometTooling -> rails_komet
   #
   def to_snake_case(camel_cased_word)
     camel_cased_word.to_s.gsub(/::/, '/').

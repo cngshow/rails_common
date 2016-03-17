@@ -3,8 +3,8 @@ require './lib/rails_common/util/helpers'
 require 'ci/reporter/rake/test_unit'
 require 'ci/reporter/rake/test_unit_loader'
 Rake::TaskManager.record_task_metadata = true
-include ETSUtilities
-#set GLASSFISH_ROOT=C:\work\ETS\glassfish
+include KOMETUtilities
+#set GLASSFISH_ROOT=C:\work\KOMET\glassfish
 #this is also the context root
 #set RAILS_RELATIVE_URL_ROOT=/rails_komet
 #domain 1 is the default if is this is unset
@@ -43,7 +43,7 @@ namespace :devops do
 
   desc 'build maven\'s target folder if needed'
   task :maven_target do |task|
-    Dir.mkdir(ETSUtilities::MAVEN_TARGET_DIRECTORY) unless File.exists?(ETSUtilities::MAVEN_TARGET_DIRECTORY)
+    Dir.mkdir(KOMETUtilities::MAVEN_TARGET_DIRECTORY) unless File.exists?(KOMETUtilities::MAVEN_TARGET_DIRECTORY)
   end
 
   desc 'Build war file'
@@ -91,18 +91,18 @@ namespace :devops do
 
 
   # task :create_version do
-  #   desc "create ETS VERSION.  Use MAJOR_VERSION, MINOR_VERSION, BUILD_VERSION to override defaults"
+  #   desc "create KOMET VERSION.  Use MAJOR_VERSION, MINOR_VERSION, BUILD_VERSION to override defaults"
   #   version_file = "#{Rails.root}/config/initializers/version2.rb"
-  #   major = ENV["MAJOR_VERSION"] || ETS_VERSION.first
-  #   minor = ENV["MINOR_VERSION"] || ETS_VERSION[1]
+  #   major = ENV["MAJOR_VERSION"] || KOMET_VERSION.first
+  #   minor = ENV["MINOR_VERSION"] || KOMET_VERSION[1]
   #   build = ENV["BUILD_VERSION"] || `git describe --always --tags`
-  #   version_string = "ETS_VERSION = #{[major.to_s, minor.to_s, build.strip]}\n"
+  #   version_string = "KOMET_VERSION = #{[major.to_s, minor.to_s, build.strip]}\n"
   #   File.open(version_file, "w") {|f| f.print(version_string)}
   #   $maven_vs = major + "." + minor + "." + build
   #   $maven_vs.chomp!
   # end
   task :isaac_rest_test do
-    ENV['CI_REPORTS'] = ETSUtilities::MAVEN_TARGET_DIRECTORY + '/reports'
+    ENV['CI_REPORTS'] = KOMETUtilities::MAVEN_TARGET_DIRECTORY + '/reports'
     ['devops:maven_target', 'ci:setup:testunit', 'test:units'].each do |t|
       Rake::Task[t].invoke
     end
