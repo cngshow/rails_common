@@ -2,13 +2,13 @@ require 'erb'
 
 module PropLoader
   extend self
-  @props = {}
 
   class << self
     attr_accessor :props
   end
 
   def self.load_prop_files(*dirs)
+    @props = {}
     dirs.each do |dir|
       # iterate over all of the .properties files in the directory
       Dir.glob("#{dir}/*.properties*") do |file|
@@ -23,6 +23,12 @@ module PropLoader
         @props.merge!(props)
       end
     end
+  end
+
+  def self.reload
+    PropLoader.load_prop_files('./config/props')
+    $PROPS = PropLoader.props.clone
+    $PROPS.freeze
   end
 
   private
@@ -63,5 +69,5 @@ module PropLoader
 end
 
 PropLoader.load_prop_files('./config/props')
-$PROPS = PropLoader.props.freeze
-#p $PROPS
+$PROPS = PropLoader.props.clone
+$PROPS.freeze
