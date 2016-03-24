@@ -46,11 +46,18 @@ namespace :devops do
     Dir.mkdir(KOMETUtilities::MAVEN_TARGET_DIRECTORY) unless File.exists?(KOMETUtilities::MAVEN_TARGET_DIRECTORY)
   end
 
+  desc 'build the context file'
+  task  :generate_context_file do |task|
+    p task.comment
+    File.open("context.txt", 'w') {|f| f.write(context) }
+  end
+
   desc 'Build war file'
   task :build_war do |task|
     p task.comment
     Rake::Task['devops:maven_target'].invoke
     Rake::Task['devops:compile_assets'].invoke
+    Rake::Task['devops:generate_context_file'].invoke
     # Rake::Task['devops:create_version'].invoke
     #sh "warble"
     Warbler::Task.new
