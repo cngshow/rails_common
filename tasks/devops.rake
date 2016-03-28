@@ -1,5 +1,5 @@
 require 'warbler'
-require './lib/rails_common/util/helpers'
+require './lib/ets_common/util/helpers'
 require 'ci/reporter/rake/test_unit'
 require 'ci/reporter/rake/test_unit_loader'
 Rake::TaskManager.record_task_metadata = true
