@@ -67,6 +67,14 @@ module KOMETUtilities
     'bad_url'
   end
 
+  ##
+  # Find all IDs in a string and return the match object (right now only UUID is implemented)
+  # @param string - the string to search for UUIDs
+  # @return - the match object from the search
+  def find_ids(string)
+    return /[a-zA-Z0-9]{8}-([a-zA-Z0-9]{4}-){3}[a-zA-Z0-9]{12}/.match(string.to_s)
+  end
+
 end
 
 module Kernel
