@@ -68,11 +68,23 @@ module KOMETUtilities
   end
 
   ##
-  # Find all IDs in a string and return the match object (right now only UUID is implemented)
-  # @param string - the string to search for UUIDs
+  # Find all IDs in a string and return the match object (right now only UUID and NID are implemented)
+  # @param [String] string - the string to search for UUIDs
+  # @param [String] type - optional paramter to specify which type of ID to search for. Values are [uuid, nid]
   # @return - the match object from the search
-  def find_ids(string)
-    return /[a-zA-Z0-9]{8}-([a-zA-Z0-9]{4}-){3}[a-zA-Z0-9]{12}/.match(string.to_s)
+  def find_ids(string, type = nil)
+
+    expressions = []
+
+    if type == nil || type == 'uuid'
+      expressions << /[a-zA-Z0-9]{8}-([a-zA-Z0-9]{4}-){3}[a-zA-Z0-9]{12}/
+    end
+
+    if type == nil || type == 'nid'
+      expressions << /-[0-9]{10}/
+    end
+
+    return Regexp.union(expressions).match(string.to_s)
   end
 
 end
