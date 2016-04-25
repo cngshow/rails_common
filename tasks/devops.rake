@@ -67,7 +67,7 @@ namespace :devops do
   desc 'Compile assets'
   task :compile_assets do |task|
     p task.comment
-    Rake::Task['assets:clobber'].invoke
+    Rake::Task['assets:clobber'].invoke if Rails.env.development?
     Rake::Task['assets:precompile'].invoke
   end
 
