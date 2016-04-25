@@ -67,8 +67,8 @@ namespace :devops do
   desc 'Compile assets'
   task :compile_assets do |task|
     p task.comment
-    Rake::Task['assets:clobber'].invoke if Rails.env.development? #Jenkins seems cranky about deletes now.  Not sure why...
-    Rake::Task['assets:precompile'].invoke
+    Rake::Task['assets:clobber'].invoke
+    Rake::Task['assets:precompile'].invoke()
   end
 
   desc 'Install bundle'
