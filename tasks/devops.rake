@@ -68,7 +68,7 @@ namespace :devops do
   task :compile_assets do |task|
     p task.comment
     Rake::Task['assets:clobber'].invoke
-    Rake::Task['assets:precompile'].invoke
+    Rake::Task['assets:precompile'].invoke()
   end
 
   desc 'Install bundle'
