@@ -1,5 +1,5 @@
 module CommonController
-  
+
   def trinidad?
     root_path.to_s.eql?('/')
   end
