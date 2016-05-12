@@ -1,4 +1,9 @@
 module CommonController
+
+  def trinidad?
+    root_path.to_s.eql?('/')
+  end
+
   def setup_routes
     routes = Rails.application.routes.named_routes.helpers.to_a
     @@routes_hash ||= {}
