@@ -23,5 +23,3 @@ module Roles
     ALL_ROLES.include? role
   end
 end
-
-
