@@ -108,5 +108,13 @@ module URI
     base_path << '/' if trailing_slash
     base_path
   end
+
+  def to_https(https_port = 443, trailing_slash = false)
+    base_path = "https://#{host}"
+    base_path << ":#{https_port}"
+    base_path << '/' if trailing_slash
+    base_path
+  end
+
 end
 #load('./lib/rails_common/util/helpers.rb')
