@@ -1,7 +1,7 @@
 module Roles
 
   #good roles.
-  DEV_SUPER_USER = :dev_super_user
+  SUPER_USER = :super_user
   ADMINISTRATOR = :administrator
 
   #loser roles.
@@ -11,7 +11,7 @@ module Roles
   APPROVER = :approver
   FINAL_APPROVER = :final_approver
 
-  ALL_ROLES = [DEV_SUPER_USER, READ_ONLY, EDITOR, REVIEWER, APPROVER, FINAL_APPROVER, ADMINISTRATOR]
+  ALL_ROLES = [SUPER_USER, ADMINISTRATOR, READ_ONLY, EDITOR, REVIEWER, APPROVER, FINAL_APPROVER]
 
   #session tags
   SESSION_USER_ROLES = :current_user_roles
