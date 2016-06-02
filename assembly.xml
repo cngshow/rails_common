@@ -11,6 +11,7 @@
 				<include>props/**/*</include>
 				<include>tasks/**/*</include>
 				<include>util/**/*</include>
+				<include>roles/**/*</include>
 			</includes>
 			<outputDirectory>/rails_common/</outputDirectory>
 		</fileSet>
