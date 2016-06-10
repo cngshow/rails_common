@@ -1,8 +1,15 @@
 require 'logging'
+require 'fileutils'
+
+#if nil we are in trinidad
+CATALINA_HOME = java.lang.System.properties['catalina.home']
+LOG_HOME = CATALINA_HOME.nil? ? "#{Rails.root}/log/" : "#{CATALINA_HOME}/log/"
+FileUtils::mkdir_p LOG_HOME
+
 # here we setup a color scheme called 'bright'
 
 #Logging.caller_tracing=true
-Logging.init :debug, :info, :warn, :error, :fatal, :always
+Logging.init :debug, :info, :warn, :error, :fatal, :unknown, :always
 
 Logging.color_scheme('pretty',
                      levels: {
@@ -10,6 +17,7 @@ Logging.color_scheme('pretty',
                          :warn => :yellow,
                          :error => :red,
                          :fatal => [:white, :on_red],
+                         :unknown => [:yellow, :on_blue],
                          :always => :white
                      },
                      date: :yellow,
@@ -38,7 +46,7 @@ rf = Logging.appenders.rolling_file(
     roll_by: $PROPS['LOG.roll_by'],
     keep: $PROPS['LOG.keep'].to_i,
     age: $PROPS['LOG.age'],
-    filename: $PROPS['LOG.filename'],
+    filename: LOG_HOME + $PROPS['LOG.filename'],
     truncate: true
 )
 
@@ -47,19 +55,45 @@ begin
   $log = ::Logging::Logger['MainLogger']
   $log.caller_tracing=$PROPS['LOG.caller_tracing'].upcase.eql?('TRUE')
 
-  $log.add_appenders 'stdout' unless $PROPS['LOG.append_stdout'].nil?
+  $log.add_appenders 'stdout' if $PROPS['LOG.append_stdout'].eql?('true')
   $log.add_appenders rf
   $log.level = $PROPS['LOG.level'].downcase.to_sym
+
+  unless $PROPS['LOG.filename_rails'].nil?
+
+    #rf_rails is for rails logging
+    rf_rails = Logging.appenders.rolling_file(
+        'file',
+        layout: Logging.layouts.pattern(
+            pattern: pattern,
+            color_scheme: 'pretty',
+        #    backtrace: true
+        ),
+        roll_by: $PROPS['LOG.roll_by'],
+        keep: $PROPS['LOG.keep'].to_i,
+        age: $PROPS['LOG.age'],
+        filename: LOG_HOME + $PROPS['LOG.filename_rails'],
+        truncate: true
+    )
+    $log_rails = ::Logging::Logger['RailsLogger']
+    $log_rails.caller_tracing=$PROPS['LOG.caller_tracing'].upcase.eql?('TRUE')
+
+    $log_rails.add_appenders 'stdout' if $PROPS['LOG.append_stdout'].eql?('true')
+    $log_rails.add_appenders rf_rails
+    $log_rails.level = $PROPS['LOG.level'].downcase.to_sym
+  end
+
 
 # these log messages will be nicely colored
 # the level will be colored differently for each message
 #
-  unless ( File.basename($0) == 'rake')
+  unless (File.basename($0) == 'rake')
     $log.always 'Logging started!'
+    $log_rails.always 'Logging started!'
   end
 rescue => ex
   warn "Logger failed to initialize.  Reason is #{ex.to_s}"
   warn ex.backtrace.join("\n")
-  warn 'Shutting down the KOMET web server!'
+  warn 'Shutting down the KOMET/PRISME web server!'
   java.lang.System.exit(1)
 end
