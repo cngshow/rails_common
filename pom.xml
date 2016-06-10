@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>gov.vha.isaac.gui.rails</groupId>
 	<artifactId>rails_common</artifactId>
-	<version>1.6-SNAPSHOT</version><!--Leave this little feller alone.  The build server will change it -->
+	<version>1.7-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
