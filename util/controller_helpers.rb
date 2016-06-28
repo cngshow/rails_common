@@ -30,7 +30,7 @@ module CommonController
         end
       end
     end
-    $log.debug('routes hash passed to javascript is ' + @@routes_hash.to_s)
+    #$log.debug('routes hash passed to javascript is ' + @@routes_hash.to_s)
     gon.routes = @@routes_hash
   end
 end
