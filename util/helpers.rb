@@ -40,7 +40,7 @@ module KOMETUtilities
   def json_to_yaml_file(json, file_name)
     if Rails.env.development?
       prefix = '#Fixture created on ' + Time.now.strftime('%F %H:%M:%S') + "\n"
-      File.write("#{TMP_FILE_PREFIX}#{file_name}" + YML_EXT,prefix + json.to_yaml)
+      File.write("#{TMP_FILE_PREFIX}#{file_name}" + YML_EXT, prefix + json.to_yaml)
       $log.debug("Writing yaml file #{TMP_FILE_PREFIX}#{file_name}.yml.")
     else
       $log.debug("Not writing yaml file #{TMP_FILE_PREFIX}#{file_name}.yml. Rails.env = #{Rails.env}")
@@ -55,9 +55,9 @@ module KOMETUtilities
   def url_to_path_string(url)
     url = url.clone
     begin
-      url.gsub!('{','') #reduce paths like http://www.google.com/foo/{id}/faa to http://www.google.com/foo/id/faa
-      url.gsub!('}','') #reduce paths like http://www.google.com/foo/{id}/faa to http://www.google.com/foo/id/faa
-      path = URI(url).path.gsub('/','_')
+      url.gsub!('{', '') #reduce paths like http://www.google.com/foo/{id}/faa to http://www.google.com/foo/id/faa
+      url.gsub!('}', '') #reduce paths like http://www.google.com/foo/{id}/faa to http://www.google.com/foo/id/faa
+      path = URI(url).path.gsub('/', '_')
       path = 'no_path' if path.empty?
       return path
     rescue => ex
@@ -97,6 +97,23 @@ module Kernel
     return true if string.eql?('1')
     return false if string.eql?('0')
     raise ArgumentError.new("invalid value for Boolean: \"#{string}\"")
+  end
+
+end
+
+module URI
+  def base_url(include_port = true, trailing_slash = false)
+    base_path = "#{scheme}://#{host}"
+    base_path << ":#{port}" if include_port
+    base_path << '/' if trailing_slash
+    base_path
+  end
+
+  def to_https(https_port = 443, trailing_slash = false)
+    base_path = "https://#{host}"
+    base_path << ":#{https_port}"
+    base_path << '/' if trailing_slash
+    base_path
   end
 
 end
