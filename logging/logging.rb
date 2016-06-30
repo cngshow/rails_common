@@ -3,7 +3,7 @@ require 'fileutils'
 
 #if nil we are in trinidad
 CATALINA_HOME = java.lang.System.properties['catalina.home']
-LOG_HOME = CATALINA_HOME.nil? ? "#{Rails.root}/log/" : "#{CATALINA_HOME}/log/"
+LOG_HOME = CATALINA_HOME.nil? ? "#{Rails.root}/logs/" : "#{CATALINA_HOME}/logs/"
 FileUtils::mkdir_p LOG_HOME
 
 # here we setup a color scheme called 'bright'
