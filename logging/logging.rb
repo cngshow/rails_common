@@ -9,6 +9,8 @@ FileUtils::mkdir_p LOG_HOME
 # here we setup a color scheme called 'bright'
 
 #Logging.caller_tracing=true
+PRISME_LOG_LEVELS = {debug: 0, info: 1, warn: 2, error: 3, fatal: 4, unknown: 5, always: 6}
+PRISME_LOG_LEVELS.freeze
 Logging.init :debug, :info, :warn, :error, :fatal, :unknown, :always
 
 Logging.color_scheme('pretty',
