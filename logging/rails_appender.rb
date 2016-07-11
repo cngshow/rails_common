@@ -18,55 +18,75 @@ module Log4JSupport
 
     def initialize
       super('RailsAppender',RailsFilter.new, RailsLayout.new)
-      set_level
-    end
-
-    def set_level
-      logger = org.apache.logging.log4j.LogManager.getRootLogger
-#levels :debug, :info, :warn, :error, :fatal, :unknown, :always
-      case $log.level
-        when PRISME_LOG_LEVELS[:debug]
-          level = org.apache.logging.log4j.Level::TRACE
-          logger.setLevel(level)
-        when PRISME_LOG_LEVELS[:info]
-          level = org.apache.logging.log4j.Level::INFO
-          logger.setLevel(level)
-        when PRISME_LOG_LEVELS[:warn]
-          level = org.apache.logging.log4j.Level::WARN
-          logger.setLevel(level)
-        when PRISME_LOG_LEVELS[:error]
-          level = org.apache.logging.log4j.Level::ERROR
-          logger.setLevel(level)
-        when PRISME_LOG_LEVELS[:fatal]
-          level = org.apache.logging.log4j.Level::FATAL
-          logger.setLevel(level)
+      @exception_lambda = ->(throwable_array) do
+        message = ""
+        throwable_array.each do |throwable|
+          message << "\n"
+          message << "#{throwable.getMessage}\n"
+          message << throwable.backtrace.join("\n\t")
+        end
+        message
       end
     end
 
     def append(log_event)
+
       level = log_event.getLevel
       logger_name = log_event.getLoggerName
       message = log_event.getMessage.getFormattedMessage
       source = log_event.getSource
+      t_a = []
+      throwable = get_throwables(log_event.getThrownProxy.getThrowable, t_a)  unless log_event.getThrownProxy.nil?
       case level
         when JLevel::TRACE, JLevel::DEBUG
           $log.debug("J::#{logger_name} | #{message} | #{source}")
+          if throwable
+            $log.debug(@exception_lambda.call(throwable))
+          end
         when JLevel::INFO
           $log.info("J::#{logger_name} | #{message} | #{source}")
+          if throwable
+            $log.info(@exception_lambda.call(throwable))
+          end
         when JLevel::WARN
           $log.warn("J::#{logger_name} | #{message} | #{source}")
+          if throwable
+            $log.warn(@exception_lambda.call(throwable))
+          end
         when JLevel::ERROR
           $log.error("J::#{logger_name} | #{message} | #{source}")
+          if throwable
+            $log.error(@exception_lambda.call(throwable))
+          end
         when JLevel::FATAL
           $log.fatal("J::#{logger_name} | #{message} | #{source}")
+          if throwable
+            $log.fatal(@exception_lambda.call(throwable))
+          end
         when JLevel::ALL
           $log.always("J::#{logger_name} | #{message} | #{source}")
+          if throwable
+            $log.always(@exception_lambda.call(throwable))
+          end
         else
           $log.unknown("J::#{logger_name} | #{message} | #{source}")
+          if throwable
+            $log.unknown(@exception_lambda.call(throwable))
+          end
       end
     end
+
+    private
+
+    def get_throwables(root_throwable, array)
+      return array if root_throwable.nil?
+      array << root_throwable
+      next_throw = root_throwable.getCause
+      return get_throwables(next_throw, array)
+    end
+
   end
 end
-
-#root logger is a org.apache.logging.log4j.core.Logger
+java.lang.System.getProperties['log4j.configurationFile'] = "file:/#{Rails.root}/lib/rails_common/logging/log4j2.xml"
+#root logger is an org.apache.logging.log4j.core.Logger
 org.apache.logging.log4j.LogManager.getRootLogger.addAppender(Log4JSupport::RailsAppender.new)
