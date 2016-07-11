@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Used in Prisme not Komet at the moment -->
+<!--If the level is set to INFO than all log events Info and above will be generated.  If Prisme (or Komet)  -->
+<!--is set to a level above info than those events will be discarded (not be logged). -->
+<Configuration status="TRACE">
+  <Loggers>
+    <Root level="TRACE"></Root>
+  </Loggers>
+</Configuration>
