@@ -33,6 +33,22 @@ module KOMETUtilities
         downcase
   end
 
+  def self.isaac_rest_site_up?(uri:)
+    result = false
+    begin
+      path = uri.path.empty? ? '/' : uri.path
+      path << 'rest/1/system/systemInfo'
+      result = Net::HTTP.new(uri.host, uri.port)
+      result.use_ssl = uri.scheme.eql?('https')
+      result = (result.head(path).kind_of?(Net::HTTPSuccess) || result.head(path).kind_of?(Net::HTTPInternalServerError))
+        # Net::HTTP.new(u, p).head('/').kind_of? Net::HTTPOK
+    rescue => ex
+      $log.warn("I could not check the URL #{uri.path} at port #{uri.port} against path #{uri.path} because #{ex}.")
+      result = false
+    end
+    result
+  end
+
   ##
   # writes the json data to a tmp file based on the filename passed
   # @param json - the JSON data to write out
