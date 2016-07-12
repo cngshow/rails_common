@@ -47,7 +47,7 @@ module KOMETUtilities
       result = false
     end
     result
-  end
+  end# test checkin
 
   ##
   # writes the json data to a tmp file based on the filename passed
