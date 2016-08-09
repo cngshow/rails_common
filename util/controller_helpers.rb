@@ -35,6 +35,13 @@ module CommonController
   end
 
   ##
+  # get_next_id - generates a unique ID by using the systems nano-second time and date
+  # @return [Integer] returns a unique ID by using the systems nano-second time and date
+  def get_next_id
+    return java.lang.System.nanoTime
+  end
+
+  ##
   # add_to_recents - uses the standard fields for recently searched concepts to add an id and description to an array of these values in the session
   # @param [Symbol] recent_name - The name of the array in the session as a symbol
   # @param [String] id - The id of the searched concept

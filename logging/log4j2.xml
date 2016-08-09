@@ -5,10 +5,10 @@
 <Configuration status="TRACE">
   <Loggers>
     <Root level="TRACE"></Root>
-    <logger name="gov.vha" level="TRACE" />
-    <logger name="com" level="ERROR" />
-    <logger name="java" level="ERROR" />
-    <logger name="javax" level="ERROR" />
-    <logger name="org" level="ERROR" />
+    <!--<logger name="gov.vha" level="TRACE" />-->
+    <!--<logger name="com" level="ERROR" />-->
+    <!--<logger name="java" level="ERROR" />-->
+    <!--<logger name="javax" level="ERROR" />-->
+    <!--<logger name="org" level="ERROR" />-->
   </Loggers>
 </Configuration>

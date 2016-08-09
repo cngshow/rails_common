@@ -4,6 +4,34 @@ module Log4JSupport
     'JLevel'
   end
 
+    #class currently unused
+  class RailsContextSelector
+    #class currently unused
+  include org.apache.logging.log4j.core.selector.ContextSelector
+
+    def getContext(fqcn, loader, currentContext)
+       getOnlyContext
+    end
+
+    def getContext(fqcn, loader, currentContext, configLocation)
+      getOnlyContext
+    end
+
+    def getLoggerContexts
+      [getOnlyContext]
+    end
+
+    def removeContext(context)
+
+    end
+    private
+
+    def getOnlyContext
+      @@context ||= org.apache.logging.log4j.core.LoggerContext.new('RailsContext')
+      @@context
+    end
+  end
+
   class RailsFilter <  org.apache.logging.log4j.core.filter.AbstractFilter
     #not doing diddly squat for now....
   end
@@ -87,6 +115,34 @@ module Log4JSupport
 
   end
 end
-java.lang.System.getProperties['log4j.configurationFile'] = "file:/#{Rails.root}/lib/rails_common/logging/log4j2.xml"
+#java.lang.System.getProperties['log4j.configurationFile'] = "file:/#{Rails.root}/lib/rails_common/logging/log4j2.xml"
 #root logger is an org.apache.logging.log4j.core.Logger
+#fact = org.apache.logging.log4j.core.impl.Log4jContextFactory.new(Log4JSupport::RailsContextSelector.new)
+#org.apache.logging.log4j.LogManager.setFactory(fact)
 org.apache.logging.log4j.LogManager.getRootLogger.addAppender(Log4JSupport::RailsAppender.new)
+
+# java_import 'gov.vha.isaac.ochre.pombuilder.upload.SrcUploadCreator' do |p,c|
+#   'JS'
+# end
+
+
+#this line is useful for debugging in eclipse to see if your appender is registered
+# ((org.apache.logging.log4j.core.Logger)LogManager.getRootLogger()).getAppenders()
+#JS.java_class.to_java.getClassLoader
+
+# cl = JS.java_class.to_java.getClassLoader
+# lmclass = cl.loadClass('org.apache.logging.log4j.LogManager')
+# m = lmclass.getDeclaredMethod('getRootLogger')
+# root_logger = m.invoke(lmclass)
+# root_logger.addAppender(Log4JSupport::RailsAppender.new)
+
+# org.apache.logging.log4j.core.LoggerContext@63d93e91
+
+# main DEBUG LoggerContext[name=14dad5dc, org.apache.logging.log4j.core.LoggerContext@f5b079f] started OK.
+
+#debug 1
+# org.apache.logging.log4j.core.LoggerContext@127205ac
+# 2016-07-21 11:28:01,823 main DEBUG LoggerContext[name=5a14e60d, org.apache.logging.log4j.core.LoggerContext@127205ac] started OK.
+
+# context 2:
+# org.apache.logging.log4j.core.LoggerContext@5c2fd20c
