@@ -106,13 +106,15 @@ module KOMETUtilities
 end
 
 module Kernel
+  TRUE_VALS = %w(true t yes y on 1)
+  FALSE_VALS = %w(false f no n off 0)
+
   def boolean(boolean_string)
-    string = boolean_string.to_s
-    return true if string =~ /^true$/i
-    return false if string.empty? || string =~ /^false$/i
-    return true if string.eql?('1')
-    return false if string.eql?('0')
-    raise ArgumentError.new("invalid value for Boolean: \"#{string}\"")
+    val = boolean_string.to_s.downcase.gsub(/\s+/, '')
+    return false if val.empty?
+    return true if TRUE_VALS.include?(val)
+    return false if FALSE_VALS.include?(val)
+    raise ArgumentError.new("invalid value for Boolean: \"#{val}\"")
   end
 
 end
