@@ -2,8 +2,10 @@ require './lib/rails_common/roles/roles'
 
 module SSOI
 
-  SSOI_USER = :ssoi_user_model
-  SSOI_HEADER = :ssoi_header
+  #using strings not symbols because we are nested, see the following:
+  #http://stackoverflow.com/questions/23530055/ruby-on-rails-sneakily-changing-nested-hash-keys-from-symbols-to-strings
+  SSOI_USER = 'ssoi_user_model'
+  SSOI_HEADER = 'ssoi_header'
   SSOI_ADSAMACCOUNTNAME = 'HTTP_ADSAMACCOUNTNAME'
 
   def ssoi_headers
