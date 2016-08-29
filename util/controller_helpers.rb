@@ -5,7 +5,10 @@ module CommonController
   end
 
   def setup_routes
+    original_verbosity = $VERBOSE
+    $VERBOSE = nil
     routes = Rails.application.routes.named_routes.helpers.to_a
+    $VERBOSE = original_verbosity
     @@routes_hash ||= {}
     if(@@routes_hash.empty?)
       routes.each do |route|
