@@ -135,7 +135,7 @@ module URI
   end
 
   def proxify
-    URI 'https://foo.com'
+    self
   end
 
 end
