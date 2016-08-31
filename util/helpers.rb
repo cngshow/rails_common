@@ -146,29 +146,30 @@ module URI
   end
 
   def valid_proxy_url?(url_string:)
+    ret = true
     begin
       $log.debug("validating url #{url_string}")
       u = URI url_string
-      raise "No scheme (http or https found!)" unless u.scheme
+      raise 'No scheme (http or https found!)' unless u.scheme
       $log.debug('valid!')
     rescue => ex
       $log.error("The url #{url_string} is malformed in the proxy file.")
       $log.error("#{ex.message}")
-      return false
+      ret = false
     end
-    return true
+    ret
   end
 
   def proxify
     if URI.proxy_mappings.nil?
-      proxy_file = File.exists?("#{$PROPS['PRISME.data_directory']}/service_url_proxy.yml") ? $PROPS['PRISME.data_directory'] + '/service_url_proxy.yml' : './config/service/service_url_proxy.yml'
+      proxy_file = File.exists?("#{$PROPS['PRISME.data_directory']}/service_url_proxy.yml") ? "#{$PROPS['PRISME.data_directory']}/service_url_proxy.yml" : './config/service/service_url_proxy.yml'
       unless File.exists? proxy_file
         $log.warn('No proxy mapping file found.  Doing nothing!')
         return self
       end
       $log.debug('initializing the proxy mappings to:')
       URI.proxy_mappings = YAML.load_file(proxy_file)
-      $log.debug("PROXY MAPPINGS ARE: " + URI.proxy_mappings.inspect)
+      $log.debug("PROXY MAPPINGS ARE: #{URI.proxy_mappings.inspect}")
       apache_host = URI.proxy_mappings[SERVICE_URL_PROXY_ROOT][SERVICE_URL_PROXY]
       $log.debug("apache host is #{apache_host}")
       valid_urls = valid_proxy_url?(url_string: apache_host)
@@ -192,9 +193,9 @@ module URI
     urls.each do |url_hash|
       url = url_hash[SERVICE_URL_PROXY_PATH]
       location = url_hash[SERVICE_URL_PROXY_LOCATION]
-      if (self.to_s.starts_with?(url))
+      if self.to_s.starts_with?(url)
         #we found our mappings!!
-        apache_proxy = URI URI.proxy_mappings[SERVICE_URL_PROXY_ROOT][SERVICE_URL_PROXY]
+        apache_proxy = URI(proxy_url)
         clone = self.clone
         url = URI url
         context = url.path
@@ -205,7 +206,7 @@ module URI
         return clone
       end
     end
-    $log.warn('No proxy mapping found for #{self}, returning self.')
+    $log.warn("No proxy mapping found for #{self}, returning self.")
     self
   end
 
