@@ -20,10 +20,10 @@ require 'uri'
 module KOMETUtilities
   TMP_FILE_PREFIX = './tmp/'
   YML_EXT = '.yml'
-  MAVEN_TARGET_DIRECTORY = "./target"
+  MAVEN_TARGET_DIRECTORY = './target'
   ##
   # this method takes a camel cased word and changes it to snake case
-  # Example: KometTooling -> rails_komet
+  # Example: RailsKomet -> rails_komet
   #
   def to_snake_case(camel_cased_word)
     camel_cased_word.to_s.gsub(/::/, '/').
@@ -100,7 +100,7 @@ module KOMETUtilities
       expressions << /-[0-9]{10}/
     end
 
-    return Regexp.union(expressions).match(string.to_s)
+    Regexp.union(expressions).match(string.to_s)
   end
 
 end
