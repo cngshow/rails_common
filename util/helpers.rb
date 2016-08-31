@@ -134,5 +134,9 @@ module URI
     base_path
   end
 
+  def proxify
+    URI 'https://foo.com'
+  end
+
 end
 #load('./lib/rails_common/util/helpers.rb')
