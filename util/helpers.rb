@@ -120,6 +120,17 @@ module Kernel
 end
 
 module URI
+
+  SERVICE_URL_PROXY = 'apache_url_proxy'
+  SERVICE_URL_PROXY_URLS = 'urls'
+  SERVICE_URL_PROXY_PATH = 'path'
+  SERVICE_URL_PROXY_LOCATION = 'location'
+  SERVICE_URL_PROXY_ROOT = 'proxy_pass'
+
+  class << self
+    attr_accessor :proxy_mappings
+  end
+
   def base_url(include_port = true, trailing_slash = false)
     base_path = "#{scheme}://#{host}"
     base_path << ":#{port}" if include_port
@@ -134,9 +145,74 @@ module URI
     base_path
   end
 
+  def valid_proxy_url?(url_string:)
+    begin
+      $log.debug("validating url #{url_string}")
+      u = URI url_string
+      raise "No scheme (http or https found!)" unless u.scheme
+      $log.debug('valid!')
+    rescue => ex
+      $log.error("The url #{url_string} is malformed in the proxy file.")
+      $log.error("#{ex.message}")
+      return false
+    end
+    return true
+  end
+
   def proxify
-    URI 'https://foo.com'
+    if URI.proxy_mappings.nil?
+      proxy_file = File.exists?("#{$PROPS['PRISME.data_directory']}/service_url_proxy.yml") ? $PROPS['PRISME.data_directory'] + '/service_url_proxy.yml' : './config/service/service_url_proxy.yml'
+      unless File.exists? proxy_file
+        $log.warn('No proxy mapping file found.  Doing nothing!')
+        return self
+      end
+      $log.debug('initializing the proxy mappings to:')
+      URI.proxy_mappings = YAML.load_file(proxy_file)
+      $log.debug("PROXY MAPPINGS ARE: " + URI.proxy_mappings.inspect)
+      apache_host = URI.proxy_mappings[SERVICE_URL_PROXY_ROOT][SERVICE_URL_PROXY]
+      $log.debug("apache host is #{apache_host}")
+      valid_urls = valid_proxy_url?(url_string: apache_host)
+      URI.proxy_mappings[SERVICE_URL_PROXY_ROOT][SERVICE_URL_PROXY_URLS].each do |url_hash|
+        url = url_hash[SERVICE_URL_PROXY_PATH]
+        valid_urls = valid_urls & valid_proxy_url?(url_string: url) # & will not short circuit
+      end
+      unless valid_urls
+        URI.proxy_mappings = nil
+        return self
+      end
+      URI.proxy_mappings[SERVICE_URL_PROXY_ROOT][SERVICE_URL_PROXY_URLS].sort! do |a, b|
+        b[SERVICE_URL_PROXY_PATH].length <=> a[SERVICE_URL_PROXY_PATH].length
+      end
+      URI.proxy_mappings.freeze
+      $log.debug(URI.proxy_mappings.inspect)
+    end
+    proxy_url = URI.proxy_mappings[SERVICE_URL_PROXY_ROOT][SERVICE_URL_PROXY]
+    #sorted longest to shortest
+    urls = URI.proxy_mappings[SERVICE_URL_PROXY_ROOT][SERVICE_URL_PROXY_URLS]
+    urls.each do |url_hash|
+      url = url_hash[SERVICE_URL_PROXY_PATH]
+      location = url_hash[SERVICE_URL_PROXY_LOCATION]
+      if (self.to_s.starts_with?(url))
+        #we found our mappings!!
+        apache_proxy = URI URI.proxy_mappings[SERVICE_URL_PROXY_ROOT][SERVICE_URL_PROXY]
+        clone = self.clone
+        url = URI url
+        context = url.path
+        clone.path.sub!(context, location)
+        clone.scheme = apache_proxy.scheme
+        clone.port = apache_proxy.port
+        clone.host = apache_proxy.host
+        return clone
+      end
+    end
+    $log.warn('No proxy mapping found for #{self}, returning self.')
+    self
   end
 
 end
 #load('./lib/rails_common/util/helpers.rb')
+# URI('https://cris.com').proxify
+# URI.proxy_mappings = nil
+
+#works:
+# URI('https://vaausappctt704.aac.va.gov:8080/komet_b/foo/faa').proxify
