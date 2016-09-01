@@ -77,7 +77,7 @@ module KOMETUtilities
       path = 'no_path' if path.empty?
       return path
     rescue => ex
-      $log.error('An invalid url was given!')
+      $log.error('An invalid matched_url was given!')
       $log.error(ex)
     end
     'bad_url'
@@ -148,16 +148,20 @@ module URI
   def valid_proxy_url?(url_string:)
     ret = true
     begin
-      $log.debug("validating url #{url_string}")
+      $log.debug("validating matched_url #{url_string}")
       u = URI url_string
       raise 'No scheme (http or https found!)' unless u.scheme
       $log.debug('valid!')
     rescue => ex
-      $log.error("The url #{url_string} is malformed in the proxy file.")
+      $log.error("The matched_url #{url_string} is malformed in the proxy file.")
       $log.error("#{ex.message}")
       ret = false
     end
     ret
+  end
+
+  def self.build(uri)
+    URI uri
   end
 
   def proxify
@@ -187,18 +191,26 @@ module URI
       URI.proxy_mappings.freeze
       $log.debug(URI.proxy_mappings.inspect)
     end
-    proxy_url = URI.proxy_mappings[SERVICE_URL_PROXY_ROOT][SERVICE_URL_PROXY]
+    proxy_url = URI.proxy_mappings[SERVICE_URL_PROXY_ROOT][SERVICE_URL_PROXY].clone
+    proxy_url << '/' unless proxy_url.last.eql? '/'
     #sorted longest to shortest
     urls = URI.proxy_mappings[SERVICE_URL_PROXY_ROOT][SERVICE_URL_PROXY_URLS]
     urls.each do |url_hash|
-      url = url_hash[SERVICE_URL_PROXY_PATH]
+      matched_url = url_hash[SERVICE_URL_PROXY_PATH]
       location = url_hash[SERVICE_URL_PROXY_LOCATION]
-      if self.to_s.starts_with?(url)
+      if self.to_s.starts_with?(matched_url)
         #we found our mappings!!
         apache_proxy = URI(proxy_url)
         clone = self.clone
-        url = URI url
-        context = url.path
+        clone.path << '/' unless clone.path.last.eql? '/'
+        matched_url = URI matched_url
+        matched_url.path << '/' if matched_url.path.empty?
+        matched_url.path << '/' unless matched_url.path.last.eql? '/'
+        context = matched_url.path
+        unless location.eql? '/'
+          location = '/' + location unless location.first.eql? '/'
+          location << '/' unless location.last.eql? '/'
+        end
         clone.path.sub!(context, location)
         clone.scheme = apache_proxy.scheme
         clone.port = apache_proxy.port
