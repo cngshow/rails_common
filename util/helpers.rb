@@ -20,10 +20,10 @@ require 'uri'
 module KOMETUtilities
   TMP_FILE_PREFIX = './tmp/'
   YML_EXT = '.yml'
-  MAVEN_TARGET_DIRECTORY = "./target"
+  MAVEN_TARGET_DIRECTORY = './target'
   ##
   # this method takes a camel cased word and changes it to snake case
-  # Example: KometTooling -> rails_komet
+  # Example: RailsKomet -> rails_komet
   #
   def to_snake_case(camel_cased_word)
     camel_cased_word.to_s.gsub(/::/, '/').
@@ -77,7 +77,7 @@ module KOMETUtilities
       path = 'no_path' if path.empty?
       return path
     rescue => ex
-      $log.error('An invalid url was given!')
+      $log.error('An invalid matched_url was given!')
       $log.error(ex)
     end
     'bad_url'
@@ -100,7 +100,7 @@ module KOMETUtilities
       expressions << /-[0-9]{10}/
     end
 
-    return Regexp.union(expressions).match(string.to_s)
+    Regexp.union(expressions).match(string.to_s)
   end
 
 end
@@ -120,6 +120,17 @@ module Kernel
 end
 
 module URI
+
+  SERVICE_URL_PROXY = 'apache_url_proxy'
+  SERVICE_URL_PROXY_URLS = 'urls'
+  SERVICE_URL_PROXY_PATH = 'path'
+  SERVICE_URL_PROXY_LOCATION = 'location'
+  SERVICE_URL_PROXY_ROOT = 'proxy_pass'
+
+  class << self
+    attr_accessor :proxy_mappings
+  end
+
   def base_url(include_port = true, trailing_slash = false)
     base_path = "#{scheme}://#{host}"
     base_path << ":#{port}" if include_port
@@ -134,5 +145,87 @@ module URI
     base_path
   end
 
+  def valid_proxy_url?(url_string:)
+    ret = true
+    begin
+      $log.debug("validating matched_url #{url_string}")
+      u = URI url_string
+      raise 'No scheme (http or https found!)' unless u.scheme
+      $log.debug('valid!')
+    rescue => ex
+      $log.error("The matched_url #{url_string} is malformed in the proxy file.")
+      $log.error("#{ex.message}")
+      ret = false
+    end
+    ret
+  end
+
+  def self.build(uri)
+    URI uri
+  end
+
+  def proxify
+    if URI.proxy_mappings.nil?
+      proxy_file = File.exists?("#{$PROPS['PRISME.data_directory']}/service_url_proxy.yml") ? "#{$PROPS['PRISME.data_directory']}/service_url_proxy.yml" : './config/service/service_url_proxy.yml'
+      unless File.exists? proxy_file
+        $log.warn('No proxy mapping file found.  Doing nothing!')
+        return self
+      end
+      $log.debug('initializing the proxy mappings to:')
+      URI.proxy_mappings = YAML.load_file(proxy_file)
+      $log.debug("PROXY MAPPINGS ARE: #{URI.proxy_mappings.inspect}")
+      apache_host = URI.proxy_mappings[SERVICE_URL_PROXY_ROOT][SERVICE_URL_PROXY]
+      $log.debug("apache host is #{apache_host}")
+      valid_urls = valid_proxy_url?(url_string: apache_host)
+      URI.proxy_mappings[SERVICE_URL_PROXY_ROOT][SERVICE_URL_PROXY_URLS].each do |url_hash|
+        url = url_hash[SERVICE_URL_PROXY_PATH]
+        valid_urls = valid_urls & valid_proxy_url?(url_string: url) # & will not short circuit
+      end
+      unless valid_urls
+        URI.proxy_mappings = nil
+        return self
+      end
+      URI.proxy_mappings[SERVICE_URL_PROXY_ROOT][SERVICE_URL_PROXY_URLS].sort! do |a, b|
+        b[SERVICE_URL_PROXY_PATH].length <=> a[SERVICE_URL_PROXY_PATH].length
+      end
+      URI.proxy_mappings.freeze
+      $log.debug(URI.proxy_mappings.inspect)
+    end
+    proxy_url = URI.proxy_mappings[SERVICE_URL_PROXY_ROOT][SERVICE_URL_PROXY].clone
+    proxy_url << '/' unless proxy_url.last.eql? '/'
+    #sorted longest to shortest
+    urls = URI.proxy_mappings[SERVICE_URL_PROXY_ROOT][SERVICE_URL_PROXY_URLS]
+    urls.each do |url_hash|
+      matched_url = url_hash[SERVICE_URL_PROXY_PATH]
+      location = url_hash[SERVICE_URL_PROXY_LOCATION]
+      if self.to_s.starts_with?(matched_url)
+        #we found our mappings!!
+        apache_proxy = URI(proxy_url)
+        clone = self.clone
+        clone.path << '/' unless clone.path.last.eql? '/'
+        matched_url = URI matched_url
+        matched_url.path << '/' if matched_url.path.empty?
+        matched_url.path << '/' unless matched_url.path.last.eql? '/'
+        context = matched_url.path
+        unless location.eql? '/'
+          location = '/' + location unless location.first.eql? '/'
+          location << '/' unless location.last.eql? '/'
+        end
+        clone.path.sub!(context, location)
+        clone.scheme = apache_proxy.scheme
+        clone.port = apache_proxy.port
+        clone.host = apache_proxy.host
+        return clone
+      end
+    end
+    $log.warn("No proxy mapping found for #{self}, returning self.")
+    self
+  end
+
 end
 #load('./lib/rails_common/util/helpers.rb')
+# URI('https://cris.com').proxify
+# URI.proxy_mappings = nil
+
+#works:
+# URI('https://vaausappctt704.aac.va.gov:8080/komet_b/foo/faa').proxify
