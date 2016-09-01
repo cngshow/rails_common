@@ -198,7 +198,7 @@ module URI
     urls.each do |url_hash|
       matched_url = url_hash[SERVICE_URL_PROXY_PATH]
       location = url_hash[SERVICE_URL_PROXY_LOCATION]
-      if self.to_s.starts_with?(matched_url)
+      if (self.to_s.starts_with?(matched_url) || (self.clone.to_s << '/').starts_with?(matched_url))
         #we found our mappings!!
         apache_proxy = URI(proxy_url)
         clone = self.clone
@@ -229,3 +229,7 @@ end
 
 #works:
 # URI('https://vaausappctt704.aac.va.gov:8080/komet_b/foo/faa').proxify
+
+#irb(main):011:0> URI('https://vaausappctt704.aac.va.gov:8080/komet_b/').proxify
+#=> #<URI::HTTPS https://vaauscttweb81.aac.va.gov/server_1_rails_fazzle/>
+#    irb(main):012:0> URI('https://vaausappctt704.aac.va.gov:8080/komet_b').proxify
