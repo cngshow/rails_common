@@ -162,8 +162,7 @@ module PrismeUtilities
   SSOI_LOGOUT = 'ssoi_logout'
 
 
-  def self.ssoi_logout_path_from_json_string(config:)
-    hash = JSON.parse config
-    hash[APPLICATION_URLS][SSOI_LOGOUT]
+  def self.ssoi_logout_path_from_json_string(config_hash:)
+    config_hash[APPLICATION_URLS][SSOI_LOGOUT]
   end
 end
