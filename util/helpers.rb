@@ -155,3 +155,15 @@ module URI
     base_path
   end
 end
+
+#methods visible in Komet and Prisme go here.
+module PrismeUtilities
+  APPLICATION_URLS = 'application_urls'
+  SSOI_LOGOUT = 'ssoi_logout'
+
+
+  def self.ssoi_logout_path_from_json_string(config:)
+    hash = JSON.parse config
+    hash[APPLICATION_URLS][SSOI_LOGOUT]
+  end
+end
