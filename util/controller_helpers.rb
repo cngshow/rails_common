@@ -1,4 +1,18 @@
 module CommonController
+  def self.get_rest_connection(url, header = 'application/json')
+    conn = Faraday.new(url: url) do |faraday|
+      faraday.request :url_encoded # form-encode POST params
+      faraday.use Faraday::Response::Logger, $log
+      faraday.headers['Accept'] = header
+      faraday.adapter :net_http # make requests with Net::HTTP
+      #faraday.basic_auth(props[PrismeService::NEXUS_USER], props[PrismeService::NEXUS_PWD])
+    end
+    conn
+  end
+
+  def get_rest_connection(url, header = 'application/json')
+    CommonController.get_rest_connection(url, header)
+  end
 
   def trinidad?
     root_path.to_s.eql?('/')
@@ -10,7 +24,7 @@ module CommonController
     routes = Rails.application.routes.named_routes.helpers.to_a
     $VERBOSE = original_verbosity
     @@routes_hash ||= {}
-    if(@@routes_hash.empty?)
+    if (@@routes_hash.empty?)
       routes.each do |route|
         begin
           @@routes_hash[route.to_s] = self.send(route)
@@ -62,7 +76,7 @@ module CommonController
     end
 
     # only proceed if the array does not already contain the id and term that were searched for
-    already_exist = recents_array.find {|recent|
+    already_exist = recents_array.find { |recent|
       (recent[:id] == id && recent[:text] == description)
     }
 

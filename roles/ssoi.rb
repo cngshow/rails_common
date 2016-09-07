@@ -23,4 +23,8 @@ module SSOI
     $log.debug("The SSOI user is #{ssoi_user_name}")
     ssoi_user_name
   end
+
+  def clean_roles_session
+    session.delete(Roles::SESSION_ROLES_ROOT)
+  end
 end
