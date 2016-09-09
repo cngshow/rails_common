@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>gov.vha.isaac.gui.rails</groupId>
 	<artifactId>rails_common</artifactId>
-	<version>1.21</version>
+	<version>1.22</version>
 	<!--Leave the little feller above alone.  The build server will change it! -->
 	<packaging>pom</packaging>
 
@@ -28,6 +28,19 @@
 		<name>U.S. Department of Veterans Affairs</name>
 		<url>www.va.gov</url>
 	</organization>
+
+	<developers>
+		<developer>
+			<properties>
+				<info>For a listing of developers, clone the project and execute 'git shortlog -sn'</info>
+			</properties>
+		</developer>
+	</developers>
+	
+	<issueManagement>
+		<system>Jazz</system>
+		<url>https://clm.rational.oit.va.gov/ccm/web/projects/CTT (CM)</url>
+	</issueManagement>
 
 	<build>
 		<plugins>
