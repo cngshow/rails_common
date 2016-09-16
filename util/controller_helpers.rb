@@ -1,4 +1,18 @@
 module CommonController
+
+  def pundit_error(exception)
+    $log.error(exception.message)
+    $log.error(exception.class.to_s)
+    $log.error request.fullpath
+    $log.error(exception.backtrace.join("\n"))
+
+    if exception.is_a?(Pundit::NotAuthorizedError) || exception.is_a?(Pundit::AuthorizationNotPerformedError)
+        render :file => "#{Rails.root}/lib/rails_common/public/not_authorized.html"
+      else
+        render :file => "#{Rails.root}/lib/rails_common/public/exception.html"
+    end
+  end
+
   def self.get_rest_connection(url, header = 'application/json')
     conn = Faraday.new(url: url) do |faraday|
       faraday.request :url_encoded # form-encode POST params
