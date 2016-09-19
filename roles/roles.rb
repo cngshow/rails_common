@@ -46,7 +46,7 @@ module PunditDynamicRoles
       roles_array = roles.last
       on.define_singleton_method method do
         user_roles = user_and_roles[:roles].nil? ? [] : user_and_roles[:roles]
-        (user_roles & roles_array).empty?
+        !(user_roles & roles_array).empty?
       end
     end
 
