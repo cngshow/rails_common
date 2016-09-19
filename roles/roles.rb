@@ -9,11 +9,15 @@ module Roles
   EDITOR = :editor
   REVIEWER = :reviewer
   APPROVER = :approver
+  MANAGER = :manager
 
-  ALL_ROLES = [SUPER_USER, ADMINISTRATOR, READ_ONLY, EDITOR, REVIEWER, APPROVER]
+  ALL_ROLES = [SUPER_USER, ADMINISTRATOR, READ_ONLY, EDITOR, REVIEWER, APPROVER, MANAGER]
 
   #causes a pundit method called any_administrator? to dynamically show up.
-  COMPOSITE_ROLES = {any_administrator: [ADMINISTRATOR, SUPER_USER]}
+  COMPOSITE_ROLES = {
+      any_administrator: [ADMINISTRATOR, SUPER_USER],
+      can_add_comments: [EDITOR, REVIEWER, APPROVER, MANAGER]
+  }
 
   #using strings not symbols because we are nested, see the following:
   #http://stackoverflow.com/questions/23530055/ruby-on-rails-sneakily-changing-nested-hash-keys-from-symbols-to-strings
