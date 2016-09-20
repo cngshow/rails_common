@@ -1,4 +1,5 @@
 module CommonController
+  ERROR_DIALOG_CSS = File.open("#{Rails.root}/lib/rails_common/public/error_dialog.css", 'r') { |file| file.read }
 
   def pundit_error(exception)
     $log.error(exception.message)
@@ -7,9 +8,12 @@ module CommonController
     $log.error(exception.backtrace.join("\n"))
 
     if exception.is_a?(Pundit::NotAuthorizedError) || exception.is_a?(Pundit::AuthorizationNotPerformedError)
-        render :file => "#{Rails.root}/lib/rails_common/public/not_authorized.html"
-      else
-        render :file => "#{Rails.root}/lib/rails_common/public/exception.html"
+      erb = "#{Rails.root}/lib/rails_common/public/not_authorized.html.erb"
+      erb_str = File.open(erb, 'r') { |file| file.read }
+      erb_str = ERB.new(erb_str).result(binding)
+      render html: erb_str.html_safe
+    else
+        raise exception
     end
   end
 
