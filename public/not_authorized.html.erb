@@ -1,0 +1,16 @@
+<style>
+  <%= ERROR_DIALOG_CSS %>
+</style>
+
+<div class="dialog">
+  <div>
+    <h1>You are not authorized to view this page!</h1>
+    <p>Only authorized users are allowed access to this page.</p>
+    <p>Exception is:<br>
+      <%= exception.message %><br><br>
+      <% if Rails.env.development? %>
+          <%= exception.backtrace.join("\n") %>
+      <% end %>
+    </p>
+  </div>
+</div>
