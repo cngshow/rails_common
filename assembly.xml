@@ -12,6 +12,7 @@
 				<include>tasks/**/*</include>
 				<include>util/**/*</include>
 				<include>roles/**/*</include>
+				<include>public/**/*</include>
 			</includes>
 			<outputDirectory>/rails_common/</outputDirectory>
 		</fileSet>
