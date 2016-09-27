@@ -25,6 +25,6 @@ module SSOI
   end
 
   def clean_roles_session
-    session.delete(Roles::SESSION_ROLES_ROOT)
+    session[Roles::SESSION_ROLES_ROOT].delete(SSOI::SSOI_USER) unless session[Roles::SESSION_ROLES_ROOT].nil?
   end
 end
