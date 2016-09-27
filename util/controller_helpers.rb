@@ -1,5 +1,6 @@
 module CommonController
   ERROR_DIALOG_CSS = File.open("#{Rails.root}/lib/rails_common/public/error_dialog.css", 'r') { |file| file.read }
+  CONCEPT_RECENTS = :general_concept_recents
 
   def pundit_error(exception)
     $log.error(exception.message)
@@ -16,8 +17,6 @@ module CommonController
         raise exception
     end
   end
-
-  CONCEPT_RECENTS = :general_concept_recents
 
   def self.get_rest_connection(url, header = 'application/json')
       conn = Faraday.new(url: url) do |faraday|
@@ -73,9 +72,9 @@ module CommonController
 
     ##
     # get_next_id - generates a unique ID by using the systems nano-second time and date
-    # @return [Integer] returns a unique ID by using the systems nano-second time and date
+    # @return [String] returns a unique ID by using the systems nano-second time and date
     def get_next_id
-        return java.lang.System.nanoTime
+        return java.lang.System.nanoTime.to_s
     end
 
     ##
