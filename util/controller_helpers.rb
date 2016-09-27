@@ -82,9 +82,10 @@ module CommonController
     # @param [Symbol] recent_name - The name of the array in the session as a symbol
     # @param [String] id - The id of the searched concept
     # @param [String] description - The description of the searched concept
+    # @param [String] type - The terminology type of the searched concept
     # @param [Integer] max_items - The total number of items to store in the array. When array has reached the limit the oldest entry will be removed to make room. Optional, defaults to 20
     # @return [Boolean] returns true if the values were added, false if they were not because they already existed in the array.
-    def add_to_recents(recent_name, id, description, max_items: 20)
+    def add_to_recents(recent_name, id, description, type, max_items: 20)
 
         recents_array = []
         added = false
@@ -107,7 +108,7 @@ module CommonController
             end
 
             # put the current items into the beginning of the array
-            recents_array.insert(0, {id: id, text: description})
+            recents_array.insert(0, {id: id, text: description, type: type})
 
             # put the array into the session
             session[recent_name] = recents_array
