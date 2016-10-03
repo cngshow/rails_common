@@ -1,11 +1,11 @@
 module Roles
-  SUPER_USER = :super_user
-  ADMINISTRATOR = :administrator
-  READ_ONLY = :read_only
-  EDITOR = :editor
-  REVIEWER = :reviewer
-  APPROVER = :approver
-  MANAGER = :manager
+  SUPER_USER = 'super_user'
+  ADMINISTRATOR = 'administrator'
+  READ_ONLY = 'read_only'
+  EDITOR = 'editor'
+  REVIEWER = 'reviewer'
+  APPROVER = 'approver'
+  MANAGER = 'manager'
 
   ALL_ROLES = [SUPER_USER, ADMINISTRATOR, READ_ONLY, EDITOR, REVIEWER, APPROVER, MANAGER]
 
@@ -28,7 +28,7 @@ module PunditDynamicRoles
       on.define_singleton_method("#{role}?".to_sym) do
         $log.debug("The user is #{user_and_roles[:user]}, the roles are #{user_and_roles[:roles]}")
         user_roles = user_and_roles[:roles].nil? ? [] : user_and_roles[:roles]
-        (user_roles.include? role.to_s) || (user_roles.include? Roles::SUPER_USER.to_s)
+        (user_roles.include? role) || (user_roles.include? Roles::SUPER_USER)
       end
     end
 
