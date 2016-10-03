@@ -27,7 +27,7 @@ module UserSession
     begin
       raise 'Invalid call to user_session. Too many arguments passed' if args.empty? || args.length > 2
       key = args.first
-      unless valid? key
+      unless valid_key? key
         raise 'Invalid key argument passed. Use the constants in UserSession to access the user_session data'
       end
 
@@ -44,7 +44,7 @@ module UserSession
     session['user_data'] ||= {}
   end
 
-  def valid?(key)
+  def valid_key?(key)
     ALL_USER_SESSION_VARS.include?(key)
   end
 end
