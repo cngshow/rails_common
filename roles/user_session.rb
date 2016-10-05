@@ -19,10 +19,6 @@ module UserSession
     _session.clear
   end
 
-  def clear_ssoi_user
-    _session.delete(SSOI_USER)
-  end
-
   def user_session(*args)
     begin
       raise 'Invalid call to user_session. Too many arguments passed' if args.empty? || args.length > 2
