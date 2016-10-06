@@ -1,6 +1,6 @@
 module SSOI
   def ssoi_headers
-    ssoi_user_name = request.headers['SSOI_ADSAMACCOUNTNAME']
+    ssoi_user_name = request.headers['HTTP_ADSAMACCOUNTNAME']
     $log.debug("ssoi user is #{ssoi_user_name}")
     return nil if ssoi_user_name.to_s.strip.empty?
 

@@ -1,11 +1,11 @@
 module Roles
-  SUPER_USER = :super_user
-  ADMINISTRATOR = :administrator
-  READ_ONLY = :read_only
-  EDITOR = :editor
-  REVIEWER = :reviewer
-  APPROVER = :approver
-  MANAGER = :manager
+  SUPER_USER = 'super_user'
+  ADMINISTRATOR = 'administrator'
+  READ_ONLY = 'read_only'
+  EDITOR = 'editor'
+  REVIEWER = 'reviewer'
+  APPROVER = 'approver'
+  MANAGER = 'manager'
 
   ALL_ROLES = [SUPER_USER, ADMINISTRATOR, READ_ONLY, EDITOR, REVIEWER, APPROVER, MANAGER]
 
