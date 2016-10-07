@@ -9,7 +9,7 @@ include KOMETUtilities
 #set RAILS_RELATIVE_URL_ROOT=/rails_komet
 #domain 1 is the default if is this is unset
 #set GLASSFISH_DOMAIN=domain1
-#glassfish console:
+#glassfish console: 
 #http://localhost:4848/
 
 namespace :devops do
