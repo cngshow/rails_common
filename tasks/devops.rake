@@ -9,7 +9,7 @@ include KOMETUtilities
 #set RAILS_RELATIVE_URL_ROOT=/rails_komet
 #domain 1 is the default if is this is unset
 #set GLASSFISH_DOMAIN=domain1
-#glassfish console: 
+#glassfish console:
 #http://localhost:4848/
 
 namespace :devops do
@@ -65,6 +65,8 @@ namespace :devops do
     Rake::Task['devops:maven_target'].invoke
     Rake::Task['devops:compile_assets'].invoke
     Rake::Task['devops:generate_context_file'].invoke
+    Rake::Task['devops:generate_context_file'].invoke
+    Rake::Task['devops:generate_version_file'].invoke
     # Rake::Task['devops:create_version'].invoke
     #sh "warble"
     Warbler::Task.new
