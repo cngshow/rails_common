@@ -21,6 +21,7 @@ namespace :devops do
   default_name = to_snake_case(Rails.application.class.parent)
   default_war = "#{default_name}.war"
   context = env('RAILS_RELATIVE_URL_ROOT', "/#{default_name}")
+  version = env('PROJECT_VERSION', "unversioned")
   ENV['RAILS_RELATIVE_URL_ROOT'] = env('RAILS_RELATIVE_URL_ROOT', "/#{default_name}")
   ENV['RAILS_ENV'] = env('RAILS_ENV', 'test')
   domain = env('GLASSFISH_DOMAIN', 'domain1')
@@ -50,6 +51,12 @@ namespace :devops do
   task  :generate_context_file do |task|
     p task.comment
     File.open("context.txt", 'w') {|f| f.write(context) }
+  end
+
+  desc 'build the version file'
+  task  :generate_version_file do |task|
+    p task.comment
+    File.open("version.txt", 'w') {|f| f.write(version) }
   end
 
   desc 'Build war file'
