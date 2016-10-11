@@ -9,7 +9,7 @@ FileUtils::mkdir_p LOG_HOME
 # here we setup a color scheme called 'bright'
 
 #Logging.caller_tracing=true
-Logging.init :debug, :info, :warn, :error, :fatal, :unknown, :always
+Logging.init :trace, :debug, :info, :warn, :error, :fatal, :unknown, :always
 
 Logging.color_scheme('pretty',
                      levels: {
