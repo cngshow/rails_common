@@ -1,7 +1,7 @@
 module SSOI
   def ssoi_headers
     ssoi_login = request.headers['HTTP_ADSAMACCOUNTNAME']
-    $log.debug("ssoi user is #{ssoi_login}")
+    $log.trace("ssoi user is #{ssoi_login}")
     return nil if ssoi_login.to_s.strip.empty?
 
     user_session(UserSession::LOGIN, ssoi_login)
