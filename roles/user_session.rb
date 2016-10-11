@@ -9,7 +9,9 @@ module UserSession
   PWD = 'user_password'
   ROLES = 'user_roles'
   SSOI_USER = 'ssoi_user'
-  ALL_USER_SESSION_VARS = [LAST_ROLE_CHECK, TOKEN, LOGIN, PWD, ROLES, SSOI_USER]
+  # EMAIL = 'email'
+  # USER_NAME = 'user_name'
+  ALL_USER_SESSION_VARS = [LAST_ROLE_CHECK, TOKEN, LOGIN, PWD, ROLES, SSOI_USER] #, EMAIL, USER_NAME]
 
   def user_session_defined?
     ! _session.empty?
