@@ -86,6 +86,7 @@ module CommonController
 
         is_id = false
 
+        # TODO - add support for other id types
         if type == 'uuid'
             is_id = id.to_s.match(/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/) != nil
         end
@@ -132,5 +133,35 @@ module CommonController
         end
 
         return added
+    end
+
+    ##
+    # find_metadata_by_id - loops through the metadata and finds an entry containing the specified id.
+    # @param [String] id - the ID to search for
+    # @param [String] id_type - the type of id search for. Options are 'uuid' (default), 'sequence'
+    # @param [boolean] return_description - Should the function return the FSN description (true) or the metadata key of the found value (false). Default is true
+    # @return [String] returns either the FSN description or the metadata object of the found value, as specified by return_description. If no entry matches returns nil.
+    def find_metadata_by_id (id, id_type: 'uuid', return_description: true)
+
+        # loop through the metadata structure
+        $isaac_metadata_auxiliary.each_value do |value|
+
+            # check to see if the passed id matches the specified id in the metadata
+            if id_type == 'uuid' && value['uuids'].first[:uuid] == id
+                found = true
+            elsif id_type == 'sequence' && value['uuids'].first[:translation]['value'].to_s == id.to_s
+                found = true
+            end
+
+            # if this value was a match, return the specified object
+            if found && return_description
+                return value[:fsn]
+            elsif found
+                return value
+            end
+        end
+
+        # if nothing was found return nil
+        return nil
     end
 end
