@@ -9,9 +9,11 @@ module UserSession
   PWD = 'user_password'
   ROLES = 'user_roles'
   SSOI_USER = 'ssoi_user'
+  WORKFLOW_UUID = 'workflow_uuid'
+  WORKFLOW_DEF_UUID = 'workflow_definition_uuid'
   # EMAIL = 'email'
   # USER_NAME = 'user_name'
-  ALL_USER_SESSION_VARS = [LAST_ROLE_CHECK, TOKEN, LOGIN, PWD, ROLES, SSOI_USER] #, EMAIL, USER_NAME]
+  ALL_USER_SESSION_VARS = [LAST_ROLE_CHECK, TOKEN, LOGIN, PWD, ROLES, SSOI_USER, WORKFLOW_DEF_UUID, WORKFLOW_UUID] #, EMAIL, USER_NAME]
 
   def user_session_defined?
     ! _session.empty?
@@ -19,6 +21,11 @@ module UserSession
 
   def clear_user_session
     _session.clear
+  end
+
+  def clear_user_workflow
+    _session.delete(WORKFLOW_UUID)
+    _session.delete(WORKFLOW_DEF_UUID)
   end
 
   def user_session(*args)
