@@ -155,7 +155,7 @@ module CommonController
 
             # if this value was a match, return the specified object
             if found && return_description
-                return value[:fsn]
+                return value['fsn']
             elsif found
                 return value
             end
@@ -163,5 +163,22 @@ module CommonController
 
         # if nothing was found return nil
         return nil
+    end
+
+    ##
+    # ruby_classname_to_java - takes a class name in Ruby format (ex: 'Gov::Vha::Isaac::Rest::Api1::Data::Sememe::DataTypes::RestDynamicSememeString') and translates it into the format Java requires (ex: 'gov.vha.isaac.rest.api1.data.sememe.dataTypes.RestDynamicSememeString')
+    # @param [String] class_name - The Ruby formatted class name to translate
+    # @return [String] returns the class name in Java format
+    def ruby_classname_to_java(class_name:)
+
+        parts = class_name.to_s.split('::')
+        packageless_class_name = parts.pop
+
+        parts.map! do |package_part|
+            package_part.downcase
+        end
+
+        parts << packageless_class_name
+        parts.join('.')
     end
 end
