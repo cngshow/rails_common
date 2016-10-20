@@ -175,7 +175,8 @@ module CommonController
         packageless_class_name = parts.pop
 
         parts.map! do |package_part|
-            package_part.downcase
+            package_part[0] = package_part[0].downcase
+            package_part
         end
 
         parts << packageless_class_name
