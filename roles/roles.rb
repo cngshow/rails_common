@@ -12,7 +12,8 @@ module Roles
   #causes a pundit method called any_administrator? to dynamically show up.
   COMPOSITE_ROLES = {
       any_administrator: [ADMINISTRATOR, SUPER_USER],
-      can_add_comments: [EDITOR, REVIEWER, APPROVER, MANAGER]
+      can_add_comments: [SUPER_USER, EDITOR, REVIEWER, APPROVER, MANAGER],
+      can_edit_concept: [SUPER_USER, EDITOR],
   }
 
   def self.valid_role?(role)
