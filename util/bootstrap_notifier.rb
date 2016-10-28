@@ -1,6 +1,6 @@
 module BootstrapNotifier
   def show_flash
-    ret = _bs_session.clone
+    ret = _bs_session.clone.uniq
     _bs_session.clear
     ret
   end
