@@ -25,6 +25,7 @@ module PunditDynamicRoles
 
   class << self
     attr_accessor :flash_alert_block
+    attr_accessor :roles
   end
 
   def self.add_policy_methods(on, user_and_roles)
@@ -54,10 +55,18 @@ module PunditDynamicRoles
   def self.add_action_methods(on)
     #dynamically add authorization methods
     (Roles::ALL_ROLES + Roles::COMPOSITE_ROLES.keys).each do |role|
-      method = "#{role}?".to_sym
+      method = "#{role}".to_sym
       on.define_singleton_method(method) do
         authorize :role, method
       end
+      method = "#{role}?".to_sym
+      on.define_singleton_method(method) do
+        user_roles = PunditDynamicRoles.roles.call
+        base_role = user_roles.include? role
+        composite_role = (user_roles & Roles::COMPOSITE_ROLES[role]).empty? if (Roles::COMPOSITE_ROLES.key? role)
+        base_role || !composite_role
+      end
+      ApplicationController.helper_method method
     end
   end
 end
