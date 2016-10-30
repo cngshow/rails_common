@@ -23,11 +23,6 @@ end
 
 module PunditDynamicRoles
 
-  class << self
-    attr_accessor :flash_alert_block
-    attr_accessor :roles
-  end
-
   def self.add_policy_methods(on, user_and_roles)
 
     Roles::ALL_ROLES.each do |role|
@@ -35,7 +30,7 @@ module PunditDynamicRoles
         $log.debug("The user is #{user_and_roles[:user]}, the roles are #{user_and_roles[:roles]}")
         user_roles = user_and_roles[:roles].nil? ? [] : user_and_roles[:roles]
         sufficient_permissions = (user_roles.include? role) || (user_roles.include? Roles::SUPER_USER)
-        PunditDynamicRoles.flash_alert_block.call unless sufficient_permissions
+        user_and_roles[:controller_instance].flash_alert_lambda.call unless sufficient_permissions
         sufficient_permissions
       end
     end
@@ -46,7 +41,7 @@ module PunditDynamicRoles
       on.define_singleton_method method do
         user_roles = user_and_roles[:roles].nil? ? [] : user_and_roles[:roles]
         sufficient_permissions = !(user_roles & roles_array).empty?
-        PunditDynamicRoles.flash_alert_block.call unless sufficient_permissions
+        user_and_roles[:controller_instance].flash_alert_lambda.call unless sufficient_permissions
         sufficient_permissions
       end
     end
@@ -61,7 +56,7 @@ module PunditDynamicRoles
       end
       method = "#{role}?".to_sym
       on.define_singleton_method(method) do
-        user_roles = PunditDynamicRoles.roles.call
+        user_roles = on.pundit_user[:roles]
         base_role = user_roles.include? role
         composite_role = (user_roles & Roles::COMPOSITE_ROLES[role]).empty? if (Roles::COMPOSITE_ROLES.key? role)
         base_role || !composite_role

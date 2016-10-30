@@ -1,4 +1,8 @@
 module BootstrapNotifier
+
+  INSUFFICIENT_PRIVILEGES = 'Insufficient privileges!<br>Please refresh your browser!'
+  ROLE_CHANGE = 'Your roles have changed.<br> Please refresh your browser as soon as possible.'
+
   def show_flash
     ret = _bs_session.clone.uniq
     _bs_session.clear
