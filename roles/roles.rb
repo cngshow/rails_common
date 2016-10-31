@@ -30,7 +30,7 @@ module PunditDynamicRoles
         $log.debug("The user is #{user_and_roles[:user]}, the roles are #{user_and_roles[:roles]}")
         user_roles = user_and_roles[:roles].nil? ? [] : user_and_roles[:roles]
         sufficient_permissions = (user_roles.include? role) || (user_roles.include? Roles::SUPER_USER)
-        user_and_roles[:controller_instance].flash_alert_lambda.call unless sufficient_permissions
+        user_and_roles[:controller_instance].flash_alert_insufficient_privileges unless sufficient_permissions
         sufficient_permissions
       end
     end
@@ -41,7 +41,7 @@ module PunditDynamicRoles
       on.define_singleton_method method do
         user_roles = user_and_roles[:roles].nil? ? [] : user_and_roles[:roles]
         sufficient_permissions = !(user_roles & roles_array).empty?
-        user_and_roles[:controller_instance].flash_alert_lambda.call unless sufficient_permissions
+        user_and_roles[:controller_instance].flash_alert_insufficient_privileges unless sufficient_permissions
         sufficient_permissions
       end
     end
