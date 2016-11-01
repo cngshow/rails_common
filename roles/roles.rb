@@ -61,7 +61,12 @@ module PunditDynamicRoles
         composite_role = (user_roles & Roles::COMPOSITE_ROLES[role]).empty? if (Roles::COMPOSITE_ROLES.key? role)
         base_role || !composite_role
       end
-      ApplicationController.helper_method method
+      begin
+        ApplicationController.helper_method method
+      rescue => ex
+        $log.error("On role #{role} I could not add the helper method #{method}, #{ex}")
+        $log.error(ex.backtrace.join("\n"))
+      end
     end
   end
 end
