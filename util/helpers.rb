@@ -57,9 +57,9 @@ module KOMETUtilities
     if Rails.env.development?
       prefix = '#Fixture created on ' + Time.now.strftime('%F %H:%M:%S') + "\n"
       File.write("#{TMP_FILE_PREFIX}#{file_name}" + YML_EXT, prefix + json.to_yaml)
-      $log.debug("Writing yaml file #{TMP_FILE_PREFIX}#{file_name}.yml.")
+      $log.trace("Writing yaml file #{TMP_FILE_PREFIX}#{file_name}.yml.")
     else
-      $log.debug("Not writing yaml file #{TMP_FILE_PREFIX}#{file_name}.yml. Rails.env = #{Rails.env}")
+      $log.trace("Not writing yaml file #{TMP_FILE_PREFIX}#{file_name}.yml. Rails.env = #{Rails.env}")
     end
 
   end

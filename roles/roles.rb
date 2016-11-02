@@ -27,7 +27,7 @@ module PunditDynamicRoles
 
     Roles::ALL_ROLES.each do |role|
       on.define_singleton_method("#{role}?".to_sym) do
-        $log.debug("The user is #{user_and_roles[:user]}, the roles are #{user_and_roles[:roles]}")
+        $log.trace("The user is #{user_and_roles[:user]}, the roles are #{user_and_roles[:roles]}")
         user_roles = user_and_roles[:roles].nil? ? [] : user_and_roles[:roles]
         sufficient_permissions = (user_roles.include? role) || (user_roles.include? Roles::SUPER_USER)
         user_and_roles[:controller_instance].flash_alert_insufficient_privileges unless sufficient_permissions
@@ -61,7 +61,12 @@ module PunditDynamicRoles
         composite_role = (user_roles & Roles::COMPOSITE_ROLES[role]).empty? if (Roles::COMPOSITE_ROLES.key? role)
         base_role || !composite_role
       end
-      ApplicationController.helper_method method
+      begin
+        ApplicationController.helper_method method
+      rescue => ex
+        $log.error("On role #{role} I could not add the helper method #{method}, #{ex}")
+        $log.error(ex.backtrace.join("\n"))
+      end
     end
   end
 end
