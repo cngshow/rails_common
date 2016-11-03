@@ -32,6 +32,7 @@ module PunditDynamicRoles
         sufficient_permissions = (user_roles.include? role) || (user_roles.include? Roles::SUPER_USER)
         user_and_roles[:controller_instance].flash_alert_insufficient_privileges unless sufficient_permissions
         sufficient_permissions
+        true
       end
     end
 
@@ -43,6 +44,7 @@ module PunditDynamicRoles
         sufficient_permissions = !(user_roles & roles_array).empty?
         user_and_roles[:controller_instance].flash_alert_insufficient_privileges unless sufficient_permissions
         sufficient_permissions
+        true
       end
     end
   end
@@ -60,6 +62,7 @@ module PunditDynamicRoles
         base_role = user_roles.include? role
         composite_role = (user_roles & Roles::COMPOSITE_ROLES[role]).empty? if (Roles::COMPOSITE_ROLES.key? role)
         base_role || !composite_role
+        true
       end
       begin
         ApplicationController.helper_method method

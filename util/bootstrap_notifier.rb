@@ -10,11 +10,11 @@ module BootstrapNotifier
   end
 
   def flash_notify(message:)
-    _bs_session << {options: {message: message}, settings: {type: 'success'}}
+   # _bs_session << {options: {message: message}, settings: {type: 'success'}}
   end
 
   def flash_alert(message:)
-    _bs_session << {options: {message: message}, settings: {type: 'danger', delay: 0}}
+    #_bs_session << {options: {message: message}, settings: {type: 'danger', delay: 0}}
   end
 
   private
