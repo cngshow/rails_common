@@ -23,7 +23,7 @@ module UserSession
 
   def clear_user_session
     get_mutex.synchronize do
-      _session.select! { |k| k.eql?(WORKFLOW_UUID) || k.eql?(WORKFLOW_DEF_UUID) }
+      _session.clear
     end
   end
 
