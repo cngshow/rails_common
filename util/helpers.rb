@@ -154,6 +154,14 @@ module URI
     base_path << '/' if trailing_slash
     base_path
   end
+
+  def eql_ignore_trailing_slash?(other)
+    myself = to_s
+    other = other.to_s
+    myself = myself.chop if (myself[-1].eql?('/'))
+    other = other.chop if (other[-1].eql?('/'))
+    myself.eql? other
+  end
 end
 
 #methods visible in Komet and Prisme go here.
