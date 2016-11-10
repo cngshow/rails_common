@@ -1,6 +1,10 @@
 module CommonController
     ERROR_DIALOG_CSS = File.open("#{Rails.root}/lib/rails_common/public/error_dialog.css", 'r') { |file| file.read }
-    CONCEPT_RECENTS = :general_concept_recents
+    CONCEPT_RECENTS = 'general_concept_recents'
+    CONCEPT_RECENTS_ASSOCIATION = 'association'
+    CONCEPT_RECENTS_MAPSET = 'mapset'
+    CONCEPT_RECENTS_SEMEME = 'sememe'
+    CONCEPT_RECENTS_METADATA = 'metadata'
 
     def pundit_error(exception)
         $log.error(exception.message)
