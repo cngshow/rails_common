@@ -50,7 +50,7 @@
     $('#countdown_time_remaining').text('');
 
     var update_countdown = function() {
-      var secs = (gon.countdown_mins*60) - _countdown_idx - 50;//todo remove the 50
+      var secs = (gon.countdown_mins*60) - _countdown_idx;
       $('#countdown_time_remaining').text(secs.toString());
 
       if (secs === 0){
@@ -77,7 +77,5 @@
     }
   };
 
-  <% if ssoi? %>
-    checkSessionTimeout();
-  <% end %>
+  checkSessionTimeout();
 </script>
