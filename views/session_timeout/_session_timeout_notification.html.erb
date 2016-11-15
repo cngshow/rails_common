@@ -1,5 +1,5 @@
 <!-- Modal -->
-<div id="countdown_modal" class="modal fade modal-widerrr" data-backdrop="static" role="dialog">
+<div id="countdown_modal" class="modal fade" data-backdrop="static" role="dialog">
   <div class="modal-dialog" style="width: 25%">
     <div class="modal-content">
       <div class="modal-header">
@@ -22,14 +22,26 @@
   var _interval;
 
   $(document).ajaxComplete(function (event, jqXHR, ajaxOptions) {
-    gon.last_round_trip = Math.round(new Date().getTime() / 1000);
+    //blacklisted urls - in PRISME the polling on the welcome page use the pattern reload_
+    var url = ajaxOptions.url;
+    var patt = new RegExp('reload_');
+    var res = patt.test(url);
+
+    if (res == false) {
+      setLastRoundTrip();
+    }
   });
+
+  function setLastRoundTrip() {
+    gon.last_round_trip = Math.round(new Date().getTime() / 1000);
+  }
 
   function renew_session() {
     console.log('renewing session');
+    $.get(gon.routes.renew_session_path, function(data){console.log(JSON.stringify(data))});
     $('#countdown_modal').modal('hide');
     clearInterval(_interval);
-    gon.last_round_trip = Math.round(new Date().getTime() / 1000);
+    setLastRoundTrip();
     checkSessionTimeout();
   }
 
@@ -42,7 +54,9 @@
       $('#countdown_time_remaining').text(secs.toString());
 
       if (secs === 0){
-        // clear the update countdown interval and redirect the user to the logout page
+        $('#btn_renew_session').hide();
+
+        // clear the update countdown interval and redirect the user to the session_timeout route
         clearInterval(_interval);
         window.location.href = gon.routes.session_timeout_path;
       } else {
@@ -55,12 +69,15 @@
   }
 
   var checkSessionTimeout = function() {
-    console.log('counting...');
     if (Math.round(new Date().getTime() / 1000) > gon.last_round_trip + (60 * gon.start_countdown_in)) {
+      console.log('starting session countdown...');
       countdown();
     } else {
       setTimeout(checkSessionTimeout, 1000);
     }
   };
-  checkSessionTimeout();
+
+  <% if ssoi? %>
+    checkSessionTimeout();
+  <% end %>
 </script>

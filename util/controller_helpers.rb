@@ -22,6 +22,11 @@ module CommonController
         end
     end
 
+    def renew_session
+        # this action cannot be blacklisted by ssoi
+        render json: {roundtrip: Time.now.to_i}
+    end
+
     def self.get_rest_connection(url, header = 'application/json')
         conn = Faraday.new(url: url) do |faraday|
             faraday.request :url_encoded # form-encode POST params
