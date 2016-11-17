@@ -19,6 +19,8 @@ module BootstrapNotifier
 
   private
   def _bs_session
-    session['bs_notifier'] ||= []
+    s = session if self.respond_to? :session
+    s = Thread.current.thread_variable_get(:komet_user_session) if s.nil?
+    s['bs_notifier'] ||= []
   end
 end
