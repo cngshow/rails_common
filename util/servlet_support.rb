@@ -32,6 +32,7 @@ module ServletSupport
     scheme = secure? ?  'https' : 'http'
     path = scheme + '://' + true_address.to_s + ':'  + true_port.to_s + path_string
     path.gsub!('0:0:0:0:0:0:0:1', 'localhost')
+    path.gsub!('127.0.0.1', 'localhost')
     $log.debug("Non proxy path is #{path}")
     path
   end
