@@ -14,13 +14,13 @@ module PrismeLogEvent
     #faraday.request  :basic_auth, @urls[:user], @urls[:password]
   end
 
-  def self.notify(tag, message)
+  def self.notify(tag, message, asynchronous = true)
     begin
       level_used = caller_locations(2,1)[0].label.upcase
       $log.warn("The log with tag #{tag} and message -->#{message}<-- will not be sent to the LogEvent table. You must make my call in block form!! {}'s not ().'") unless Logging::RAILS_COMMON_LEVELS.include? level_used.downcase.to_sym
       level_int = LEVELS[level_used.to_sym]
       #$log.fatal "level_int is #{level_int}, level_used is #{level_used}"
-      send(tag, message.to_s, level_int, level_used.downcase.to_sym) if level_int
+      send(tag, message.to_s, level_int, level_used.downcase.to_sym, asynchronous) if level_int
     rescue => ex
       $log.warn("Something went wrong... I cannot notify prisme's log event's #{ex}")
       $log.warn(ex.backtrace.join("\n"))
@@ -29,7 +29,7 @@ module PrismeLogEvent
   end
 
   private
-  def self.send(tag, message, level, level_used_sym)
+  def self.send(tag, message, level, level_used_sym, asynchronous)
     if Rails.application.class.parent_name.eql? 'RailsPrisme'
       #locally add to activerecord.
       begin
@@ -41,7 +41,7 @@ module PrismeLogEvent
       #make rest call
       url = $PROPS['PRISME.prisme_notify_url']
       $log.warning("This application is not properly configured! Missing key PRISME.prisme_notify_url in the property file.  Was this application deployed by prisme?") if url.nil?
-      Thread.new do
+      runnable = -> do
         begin
           CONNECTION.post do |req|
             req.body = {application_name: Rails.application.class.parent_name, level: level, tag: tag, message: message}
@@ -50,6 +50,13 @@ module PrismeLogEvent
         rescue => ex
           log_error(ex, level_used_sym, tag, message)
         end
+      end
+      if asynchronous
+        Thread.new do
+          runnable.call
+        end
+      else
+        runnable.call
       end
     end
   end
