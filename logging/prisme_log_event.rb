@@ -60,5 +60,3 @@ module PrismeLogEvent
     $log.send level_used_sym, ex.backtrace.join("\n")
   end
 end
-
-$log.always{PrismeLogEvent.notify(PrismeLogEvent::LIFECYCLE_TAG,'Prisme coming up!')}
