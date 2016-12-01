@@ -2,7 +2,7 @@ module UserSession
   #using strings not symbols because we are nested, see the following:
   #http://stackoverflow.com/questions/23530055/ruby-on-rails-sneakily-changing-nested-hash-keys-from-symbols-to-strings
 
-  # user session constants
+  # user session constants (make sure to keep unique!)
   LAST_ROLE_CHECK = 'last_role_check'
   TOKEN = 'user_token'
   LOGIN = 'user_login'
@@ -11,9 +11,10 @@ module UserSession
   SSOI_USER = 'ssoi_user'
   WORKFLOW_UUID = 'workflow_uuid'
   WORKFLOW_DEF_UUID = 'workflow_definition_uuid'
+  USER_PREFERENCES = 'user_preferences'
   # EMAIL = 'email'
   # USER_NAME = 'user_name'
-  ALL_USER_SESSION_VARS = [LAST_ROLE_CHECK, TOKEN, LOGIN, PWD, ROLES, SSOI_USER, WORKFLOW_DEF_UUID, WORKFLOW_UUID] #, EMAIL, USER_NAME]
+  ALL_USER_SESSION_VARS = [LAST_ROLE_CHECK, TOKEN, LOGIN, PWD, ROLES, SSOI_USER, WORKFLOW_DEF_UUID, WORKFLOW_UUID, USER_PREFERENCES] #, EMAIL, USER_NAME]
 
   def user_session_defined?
     !_session.empty?
