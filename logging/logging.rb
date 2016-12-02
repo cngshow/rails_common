@@ -6,10 +6,12 @@ CATALINA_HOME = java.lang.System.properties['catalina.home']
 LOG_HOME = CATALINA_HOME.nil? ? "#{Rails.root}/logs/" : "#{CATALINA_HOME}/logs/"
 FileUtils::mkdir_p LOG_HOME
 
-# here we setup a color scheme called 'bright'
-
+module Logging
+  #add a level here if needed....
+  RAILS_COMMON_LEVELS = [:trace, :debug, :info, :warn, :error, :fatal, :unknown, :always]
+end
 #Logging.caller_tracing=true
-Logging.init :trace, :debug, :info, :warn, :error, :fatal, :unknown, :always
+Logging.init *Logging::RAILS_COMMON_LEVELS
 
 Logging.color_scheme('pretty',
                      levels: {
@@ -86,7 +88,7 @@ begin
 
 # these log messages will be nicely colored
 # the level will be colored differently for each message
-#
+# PrismeLogEvent not visible yet
   unless (File.basename($0) == 'rake')
     $log.always 'Logging started!'
     $log_rails.always 'Logging started!'
