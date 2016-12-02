@@ -67,3 +67,20 @@ module PrismeLogEvent
     $log.send level_used_sym, ex.backtrace.join("\n")
   end
 end
+
+PrismeLogEvent::LEVELS.keys.map do |k| k.to_s.downcase end.each do |level|
+  $log.define_singleton_method((level+'_n').to_sym) do |*args|
+    $log.send level.to_sym do
+      tag = args.shift
+      message = args.shift
+      asynchronous = args.shift
+      PrismeLogEvent.notify(tag, message, asynchronous) unless asynchronous.nil?
+      PrismeLogEvent.notify(tag, message) if asynchronous.nil?
+      loc = caller_locations(3,1).first.path.to_s
+      line = caller_locations(3,1).first.lineno.to_s
+      loc.gsub!(Rails.root.to_s.gsub('\\','/'),'')
+      "[original location: #{loc},[#{line}][tag: #{tag}] #{message}"
+    end
+  end
+end
+# $log.warnn('gigglesz', "Evil Cris")
