@@ -3,16 +3,9 @@ require 'faraday'
 module PrismeLogEvent
 
   LEVELS = {ALWAYS: 1, WARN: 2, ERROR: 3, FATAL: 4}
-  LIFECYCLE_TAG = 'LIFE_CYCLE'
 
-  CONNECTION = Faraday.new do |faraday|
-    faraday.request :url_encoded # form-encode POST params
-    faraday.use Faraday::Response::Logger, $log
-    faraday.headers['Accept'] = 'application/json'
-    #faraday.use Faraday::Middleware::ParseJson
-    faraday.adapter :net_http # make requests with Net::HTTP
-    #faraday.request  :basic_auth, @urls[:user], @urls[:password]
-  end
+  #Add your tags here.  Keep in mind these may one day show up in a dropdown for filteration purposes in prisme.  Keep the domain small.
+  LIFECYCLE_TAG = 'LIFE_CYCLE'
 
   def self.notify(tag, message, asynchronous = true)
     begin
@@ -40,12 +33,22 @@ module PrismeLogEvent
     else
       #make rest call
       url = $PROPS['PRISME.prisme_notify_url']
-      $log.warning("This application is not properly configured! Missing key PRISME.prisme_notify_url in the property file.  Was this application deployed by prisme?") if url.nil?
+      if url.nil?
+        $log.warn("This application is not properly configured! Missing key PRISME.prisme_notify_url in the property file.  Was this application deployed by prisme?")
+        return
+      end
       runnable = -> do
         begin
-          CONNECTION.post do |req|
+          response = FaradayUtilities::CONNECTION_JSON.post do |req|
             req.body = {application_name: Rails.application.class.parent_name, level: level, tag: tag, message: message}
             req.url url
+          end
+          result_hash = JSON.parse response.body
+          event_logged = result_hash['event_logged']
+          if event_logged
+            $log.info('Notification sent! (Success)')
+          else
+            $log.warn('Notification was sent, but not accepted!  Validation errors: ' + result_hash['validation_errors'].inspect)
           end
         rescue => ex
           log_error(ex, level_used_sym, tag, message)
@@ -83,4 +86,4 @@ PrismeLogEvent::LEVELS.keys.map do |k| k.to_s.downcase end.each do |level|
     end
   end
 end
-# $log.warnn('gigglesz', "Evil Cris")
+# $log.warn_n('gigglesz', "Evil Cris")
