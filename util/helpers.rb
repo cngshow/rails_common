@@ -174,3 +174,14 @@ module PrismeUtilities
     config_hash[APPLICATION_URLS][SSOI_LOGOUT]
   end
 end
+
+module FaradayUtilities
+
+  CONNECTION_JSON = Faraday.new do |faraday|
+    faraday.request :url_encoded # form-encode POST params
+    faraday.use Faraday::Response::Logger, $log
+    faraday.headers['Accept'] = 'application/json'
+    faraday.adapter :net_http # make requests with Net::HTTP
+  end
+
+end
