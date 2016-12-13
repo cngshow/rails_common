@@ -37,6 +37,7 @@ module ServletSupport
     path
   end
 
+  #only valid in Prisme not Komet (sorry)
   def proxify(path:)
     URI(non_proxy_url(path_string: path)).proxify.to_s
   end
