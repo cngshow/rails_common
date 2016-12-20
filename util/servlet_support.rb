@@ -10,8 +10,6 @@ module ServletSupport
   def true_address
     addr = servlet_response.getLocalName
     $log.debug("True address/hostname is #{addr}")
-    addr.gsub!('0:0:0:0:0:0:0:1', 'localhost')
-    addr.gsub!('127.0.0.1', 'localhost')
     addr
   end
 
