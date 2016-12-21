@@ -115,7 +115,7 @@ begin
 # PrismeLogEvent not visible yet
   unless (File.basename($0) == 'rake')
     $log.always 'Logging started!'
-    $alog.always 'Logging started!'
+    $log.always 'Logging started!'
     $log_rails.always 'Logging started!'
   end
 rescue => ex
