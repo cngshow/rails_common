@@ -114,9 +114,7 @@ begin
 # the level will be colored differently for each message
 # PrismeLogEvent not visible yet
   unless (File.basename($0) == 'rake')
-    $log.always 'Logging started!'
-    $log.always 'Logging started!'
-    $log_rails.always 'Logging started!'
+    [$log, $alog, $log_rails].each {|e| e.always 'Logging started!'}
   end
 rescue => ex
   warn "Logger failed to initialize.  Reason is #{ex.to_s}"
