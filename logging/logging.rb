@@ -86,13 +86,36 @@ begin
     $log_rails.level = $PROPS['LOG.level'].downcase.to_sym
   end
 
+  unless $PROPS['LOG.filename_admin'].nil?
+
+    #rf_rails is for rails logging
+    rf_admin = Logging.appenders.rolling_file(
+        'file',
+        layout: Logging.layouts.pattern(
+            pattern: pattern,
+            color_scheme: 'pretty',
+        #    backtrace: true
+        ),
+        roll_by: $PROPS['LOG.roll_by'],
+        keep: $PROPS['LOG.keep'].to_i,
+        age: $PROPS['LOG.age'],
+        filename: LOG_HOME + $PROPS['LOG.filename_admin'],
+        truncate: true
+    )
+    $alog = ::Logging::Logger['LogAdmin']
+    $alog.caller_tracing=$PROPS['LOG.caller_tracing'].upcase.eql?('TRUE')
+
+    $alog.add_appenders 'stdout' if $PROPS['LOG.append_stdout'].eql?('true')
+    $alog.add_appenders rf_admin
+    $alog.level = $PROPS['LOG.level'].downcase.to_sym
+  end
+
 
 # these log messages will be nicely colored
 # the level will be colored differently for each message
 # PrismeLogEvent not visible yet
   unless (File.basename($0) == 'rake')
-    $log.always 'Logging started!'
-    $log_rails.always 'Logging started!'
+    [$log, $alog, $log_rails].each {|e| e.always 'Logging started!' unless e.nil?}
   end
 rescue => ex
   warn "Logger failed to initialize.  Reason is #{ex.to_s}"
