@@ -62,7 +62,7 @@ module PunditDynamicRoles
       end
       method = "#{role}?".to_sym
       on.define_singleton_method(method) do
-        user_roles = on.pundit_user[:roles]
+        user_roles = on.pundit_user[:roles].nil? ? [] : on.pundit_user[:roles]
         base_role = user_roles.include? role
         composite_role_array = Roles::COMPOSITE_ROLES[role].nil? ? [] : Roles::COMPOSITE_ROLES[role]
         composite_role = (user_roles & composite_role_array).empty?# if (Roles::COMPOSITE_ROLES.key? role)
