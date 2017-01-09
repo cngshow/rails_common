@@ -3,7 +3,8 @@ require 'fileutils'
 
 #if nil we are in trinidad
 CATALINA_HOME = java.lang.System.properties['catalina.home']
-LOG_HOME = CATALINA_HOME.nil? ? "#{Rails.root}/logs/" : "#{CATALINA_HOME}/logs/"
+subdir = (File.open('../context.txt').read.reverse.chop.reverse + '/') rescue ''
+LOG_HOME = CATALINA_HOME.nil? ? "#{Rails.root}/logs/#{subdir}" : "#{CATALINA_HOME}/logs/#{subdir}"
 FileUtils::mkdir_p LOG_HOME
 
 module Logging
