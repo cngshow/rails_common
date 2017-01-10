@@ -1,0 +1,19 @@
+<script>
+    (function () {
+        // read session for flash messages
+        var msgs = JSON.parse('<%= raw controller.show_flash %>');
+        for (var i = 0; i < msgs.length; i++) {
+            flash_notify(msgs[i].options, msgs[i].settings);
+        }
+
+        // read ajax response header for flash messages
+        $(document).ajaxComplete(function (event, jqXHR, ajaxOptions) {
+            if (jqXHR.getResponseHeader('<%= BootstrapNotifier::RESPONSE_HEADER %>') !== null) {
+                var flashes = JSON.parse(decodeURIComponent(jqXHR.getResponseHeader('<%= BootstrapNotifier::RESPONSE_HEADER %>')));
+                for (i = 0; i < flashes.length; i++) {
+                    flash_notify(flashes[i].options, flashes[i].settings);
+                }
+            }
+        });
+    })();
+</script>
