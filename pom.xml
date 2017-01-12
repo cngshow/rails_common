@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>gov.vha.isaac.gui.rails</groupId>
 	<artifactId>rails_common</artifactId>
-	<version>1.52</version>
+	<version>1.53</version>
 	<!--Leave the little feller above alone.  The build server will change it! -->
 	<!--Open up the assembly.xml file if new directories are added. -->
 	<packaging>pom</packaging>
