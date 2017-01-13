@@ -6,6 +6,7 @@ module BootstrapNotifier
   RESPONSE_HEADER = 'X-flash-notifier'
 
   def show_flash
+    return if pundit_user.nil?
     ret = _bs_session.clone.uniq
     _bs_session.clear
     pundit_user[:user].nil? ? [] : ret
