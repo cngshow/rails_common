@@ -27,8 +27,8 @@ module BootstrapNotifier
 
   private
 
-  def flash_msg(message, settings = nil)
-    msg = {options: {message: message}, settings: settings}
+  def flash_msg(message, settings = {})
+    msg = {options: {message: message}, settings: settings.merge!(z_index: 99999)}
     if request.xhr?
       hdrs = response[RESPONSE_HEADER] ||= []
       hdrs = JSON.parse(URI.unescape(hdrs)) unless hdrs.empty?
