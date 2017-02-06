@@ -117,6 +117,10 @@ module Kernel
     raise ArgumentError.new("invalid value for Boolean: \"#{val}\"")
   end
 
+  def gov
+    Java::Gov
+  end
+
 end
 
 module URI
