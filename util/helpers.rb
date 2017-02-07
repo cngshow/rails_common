@@ -189,3 +189,27 @@ module FaradayUtilities
   end
 
 end
+
+class String
+  # similar to the camelize in rails, but it only mutates the first character after the underscore
+  # Suppose you have the java method 'getInterfaceEngineURL', note how the last set of characters are all uppercase
+  # "interface_engine_URL".camelize() => "InterfaceEngineUrl"
+  # "interface_engine_URL".camelize_preserving => "InterfaceEngineURL"
+  # "interface_engine_URL".camelize_preserving(false) => "interfaceEngineURL"
+  def camelize_preserving(modify_first_letter = true)
+    return self.split('_').each_with_index.collect do |e, i|
+      if ((i == 0) && !modify_first_letter)
+      else
+        e[0] = e[0].capitalize
+      end
+      e
+    end.join
+  end
+end
+
+module JavaImmutable
+  def method_missing(method_sym, *args)
+    raise java.lang.UnsupportedOperationException.new("This class is immutable!") if method_sym.to_s =~ /^set/
+    super(method_sym, args)
+  end
+end
