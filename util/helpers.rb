@@ -207,6 +207,7 @@ class String
   end
 end
 
+#
 module JavaImmutable
   def method_missing(method_sym, *args)
     raise java.lang.UnsupportedOperationException.new("This class is immutable!") if method_sym.to_s =~ /^set/
