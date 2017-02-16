@@ -6,6 +6,7 @@ module PrismeLogEvent
 
   #Add your tags here.  Keep in mind these may one day show up in a dropdown for filteration purposes in prisme.  Keep the domain small.
   LIFECYCLE_TAG = 'LIFE_CYCLE'
+  CHECKSUM_TAG = 'CHECKSUM'
 
   def self.notify(tag, message, asynchronous = true)
     begin
