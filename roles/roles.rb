@@ -14,7 +14,7 @@ module Roles
       any_administrator: [SUPER_USER, ADMINISTRATOR],
       can_add_comments: [SUPER_USER, EDITOR, REVIEWER, APPROVER],
       can_edit_concept: [SUPER_USER, EDITOR],
-      can_deploy: [DEPLOYMENT_MANAGER],
+      can_deploy: [SUPER_USER, DEPLOYMENT_MANAGER],
   }
 
   def self.valid_role?(role)

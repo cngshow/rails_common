@@ -58,7 +58,7 @@ begin
   $log = ::Logging::Logger['MainLogger']
   $log.caller_tracing=$PROPS['LOG.caller_tracing'].upcase.eql?('TRUE')
 
-  $log.add_appenders 'stdout' if ($PROPS['LOG.append_stdout'].eql?('true') || $rake)
+  $log.add_appenders 'stdout' if ($PROPS['LOG.append_stdout'].eql?('true')) # || $rake (ad that in to see log in vadev jenkins build)
   $log.add_appenders rf
   $log.level = $PROPS['LOG.level'].downcase.to_sym
 
