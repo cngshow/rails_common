@@ -125,7 +125,7 @@ module Log4JSupport
           'file',
           layout: ::Logging.layouts.pattern(
               pattern: $PROPS['LOG.pattern'],
-              color_scheme: 'pretty',
+          #    color_scheme: 'pretty',
           #    backtrace: true
           ),
           roll_by: $PROPS['LOG.roll_by'],
