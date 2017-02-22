@@ -143,7 +143,6 @@ module Log4JSupport
       @@logger_map ||= {}
       begin
         class_string = log_event.getSource.getClassName
-
         cl = JLookupService.java_class.to_java.getClassLoader
         clazz = cl.loadClass class_string
         jar = clazz.getProtectionDomain().getCodeSource().getLocation.to_s.split('/').last
