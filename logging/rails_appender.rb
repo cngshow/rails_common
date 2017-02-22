@@ -143,7 +143,9 @@ module Log4JSupport
       @@logger_map ||= {}
       begin
         class_string = log_event.getSource.getClassName
-        clazz = java.lang.Thread.currentThread.getContextClassLoader.loadClass class_string
+
+        cl = JLookupService.java_class.to_java.getClassLoader
+        clazz = cl.loadClass class_string
         jar = clazz.getProtectionDomain().getCodeSource().getLocation.to_s.split('/').last
       rescue => ex
         $log.error("Could not inspect a log event #{log_event}")
