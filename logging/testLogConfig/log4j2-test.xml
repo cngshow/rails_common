@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Only used during rails build tests -->
+
+<Configuration status="WARN">  <!--status configures the log level of internal log4j events-->
+	<Appenders>
+		<!-- just log to console during rake tests.  This config file should not be found by log4j in a deployed war file -->
+		<Console name="appender-console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{DEFAULT} %-5level [%t] %logger{4} - %msg%n" />
+		</Console>
+	</Appenders>
+
+	<Loggers>
+		<Root level="WARN">
+			<AppenderRef ref="appender-console"/>
+		</Root>
+	</Loggers>
+</Configuration>
