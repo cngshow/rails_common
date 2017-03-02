@@ -5,15 +5,16 @@ module Roles
   EDITOR = 'editor'
   REVIEWER = 'reviewer'
   APPROVER = 'approver'
-  #MANAGER = 'manager'
+  DEPLOYMENT_MANAGER = 'deployment_manager'
 
-  ALL_ROLES = [SUPER_USER, ADMINISTRATOR, READ_ONLY, EDITOR, REVIEWER, APPROVER]
+  ALL_ROLES = [SUPER_USER, ADMINISTRATOR, READ_ONLY, EDITOR, REVIEWER, APPROVER, DEPLOYMENT_MANAGER]
 
   #causes a pundit method called any_administrator? to dynamically show up.
   COMPOSITE_ROLES = {
       any_administrator: [SUPER_USER, ADMINISTRATOR],
       can_add_comments: [SUPER_USER, EDITOR, REVIEWER, APPROVER],
       can_edit_concept: [SUPER_USER, EDITOR],
+      can_deploy: [SUPER_USER, DEPLOYMENT_MANAGER],
   }
 
   def self.valid_role?(role)
@@ -21,6 +22,7 @@ module Roles
   end
 end
 
+#for Komet only
 module PunditDynamicRoles
 
   def self.add_policy_methods(on, controller)

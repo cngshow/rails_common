@@ -4,13 +4,13 @@ module Log4JSupport
     'JLevel'
   end
 
-    #class currently unused
+  #class currently unused
   class RailsContextSelector
     #class currently unused
-  include org.apache.logging.log4j.core.selector.ContextSelector
+    include org.apache.logging.log4j.core.selector.ContextSelector
 
     def getContext(fqcn, loader, currentContext)
-       getOnlyContext
+      getOnlyContext
     end
 
     def getContext(fqcn, loader, currentContext, configLocation)
@@ -24,6 +24,7 @@ module Log4JSupport
     def removeContext(context)
 
     end
+
     private
 
     def getOnlyContext
@@ -32,20 +33,20 @@ module Log4JSupport
     end
   end
 
-  class RailsFilter <  org.apache.logging.log4j.core.filter.AbstractFilter
+  class RailsFilter < org.apache.logging.log4j.core.filter.AbstractFilter
     #not doing diddly squat for now....
   end
 
   class RailsLayout < org.apache.logging.log4j.core.layout.AbstractLayout
     def initialize
-      super(nil,nil)
+      super(nil, nil)
     end
   end
 
   class RailsAppender < org.apache.logging.log4j.core.appender.AbstractAppender
 
     def initialize
-      super('RailsAppender',RailsFilter.new, RailsLayout.new)
+      super('RailsAppender', RailsFilter.new, RailsLayout.new)
       @exception_lambda = ->(throwable_array) do
         message = ""
         throwable_array.each do |throwable|
@@ -58,13 +59,12 @@ module Log4JSupport
     end
 
     def append(log_event)
-
       level = log_event.getLevel
       logger_name = log_event.getLoggerName
       message = log_event.getMessage.getFormattedMessage
       source = log_event.getSource
       t_a = []
-      throwable = get_throwables(log_event.getThrownProxy.getThrowable, t_a)  unless log_event.getThrownProxy.nil?
+      throwable = get_throwables(log_event.getThrownProxy.getThrowable, t_a) unless log_event.getThrownProxy.nil?
       case level
         when JLevel::TRACE, JLevel::DEBUG
           $log.debug("J::#{logger_name} | #{message} | #{source}")
@@ -115,11 +115,9 @@ module Log4JSupport
 
   end
 end
-#java.lang.System.getProperties['log4j.configurationFile'] = "file:/#{Rails.root}/lib/rails_common/logging/log4j2.xml"
-#root logger is an org.apache.logging.log4j.core.Logger
-#fact = org.apache.logging.log4j.core.impl.Log4jContextFactory.new(Log4JSupport::RailsContextSelector.new)
-#org.apache.logging.log4j.LogManager.setFactory(fact)
+
 org.apache.logging.log4j.LogManager.getRootLogger.addAppender(Log4JSupport::RailsAppender.new)
+org.apache.logging.log4j.LogManager.getLogger("rails_logger_magic").info("Rails Appender has been added to log4j configuration")
 
 # java_import 'gov.vha.isaac.ochre.pombuilder.upload.SrcUploadCreator' do |p,c|
 #   'JS'
@@ -129,20 +127,3 @@ org.apache.logging.log4j.LogManager.getRootLogger.addAppender(Log4JSupport::Rail
 #this line is useful for debugging in eclipse to see if your appender is registered
 # ((org.apache.logging.log4j.core.Logger)LogManager.getRootLogger()).getAppenders()
 #JS.java_class.to_java.getClassLoader
-
-# cl = JS.java_class.to_java.getClassLoader
-# lmclass = cl.loadClass('org.apache.logging.log4j.LogManager')
-# m = lmclass.getDeclaredMethod('getRootLogger')
-# root_logger = m.invoke(lmclass)
-# root_logger.addAppender(Log4JSupport::RailsAppender.new)
-
-# org.apache.logging.log4j.core.LoggerContext@63d93e91
-
-# main DEBUG LoggerContext[name=14dad5dc, org.apache.logging.log4j.core.LoggerContext@f5b079f] started OK.
-
-#debug 1
-# org.apache.logging.log4j.core.LoggerContext@127205ac
-# 2016-07-21 11:28:01,823 main DEBUG LoggerContext[name=5a14e60d, org.apache.logging.log4j.core.LoggerContext@127205ac] started OK.
-
-# context 2:
-# org.apache.logging.log4j.core.LoggerContext@5c2fd20c

@@ -10,6 +10,15 @@ FileUtils::mkdir_p LOG_HOME
 module Logging
   #add a level here if needed....
   RAILS_COMMON_LEVELS = [:trace, :debug, :info, :warn, :error, :fatal, :unknown, :always]
+  def self.trace(exception)
+    trace_str = "\n"
+    if exception.respond_to? :backtrace
+      trace_str << exception.to_s << "\n"
+      unless exception.backtrace.nil?
+        trace_str << exception.backtrace.join("\n")
+      end
+    end
+  end
 end
 #Logging.caller_tracing=true
 Logging.init *Logging::RAILS_COMMON_LEVELS
@@ -58,7 +67,7 @@ begin
   $log = ::Logging::Logger['MainLogger']
   $log.caller_tracing=$PROPS['LOG.caller_tracing'].upcase.eql?('TRUE')
 
-  $log.add_appenders 'stdout' if ($PROPS['LOG.append_stdout'].eql?('true') || $rake)
+  $log.add_appenders 'stdout' if ($PROPS['LOG.append_stdout'].eql?('true')) # || $rake (ad that in to see log in vadev jenkins build)
   $log.add_appenders rf
   $log.level = $PROPS['LOG.level'].downcase.to_sym
 
@@ -110,16 +119,30 @@ begin
     $alog.level = $PROPS['LOG.level'].downcase.to_sym
   end
 
-
+ALL_LOGGERS = [$log, $alog, $log_rails].freeze
 # these log messages will be nicely colored
 # the level will be colored differently for each message
 # PrismeLogEvent not visible yet
   unless (File.basename($0) == 'rake')
-    [$log, $alog, $log_rails].each {|e| e.always 'Logging started!' unless e.nil?}
+    ALL_LOGGERS.each {|e| e.always 'Logging started!' unless e.nil?}
   end
 rescue => ex
   warn "Logger failed to initialize.  Reason is #{ex.to_s}"
   warn ex.backtrace.join("\n")
   warn 'Shutting down the KOMET/PRISME web server!'
   java.lang.System.exit(1)
+end
+
+#WARNING, using these methods doesn't produce the correct file location in the logs.
+ALL_LOGGERS.each do |logger|
+  Logging::RAILS_COMMON_LEVELS.each do |level|
+    method_name = ("#{level}_e").to_sym
+    logger.define_singleton_method(method_name) do |message, exception|
+      logger.send(level, message.to_s)
+      if exception.respond_to? :backtrace
+        logger.send(level, exception.to_s)
+        logger.send(level, exception.backtrace.join("\n")) unless exception.backtrace.nil?
+      end
+    end
+  end
 end
