@@ -148,7 +148,7 @@ begin
     $alog.level = $PROPS['LOG.level'].downcase.to_sym
   end
 
-ALL_LOGGERS = [$log, $alog, $log_rails].freeze
+ALL_LOGGERS = [$log, $alog, $log_rails].reject(&:nil?).freeze
 # these log messages will be nicely colored
 # the level will be colored differently for each message
 # PrismeLogEvent not visible yet
@@ -163,7 +163,7 @@ rescue => ex
 end
 
 ALL_LOGGERS.each do |logger|
-  logger.add_appenders error_appender unless logger.nil?
+  logger.add_appenders error_appender
 end
 
 #WARNING, using these methods doesn't produce the correct file location in the logs.
