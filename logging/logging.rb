@@ -97,6 +97,7 @@ begin
 
   $log.add_appenders 'stdout' if ($PROPS['LOG.append_stdout'].eql?('true')) # || $rake (ad that in to see log in vadev jenkins build)
   $log.add_appenders rf
+  #$log.add_appenders error_appender
   $log.level = $PROPS['LOG.level'].downcase.to_sym
 
   unless $PROPS['LOG.filename_rails'].nil?
@@ -162,7 +163,7 @@ rescue => ex
 end
 
 ALL_LOGGERS.each do |logger|
-  logger.add_appenders error_appender
+  logger.add_appenders error_appender unless logger.nil?
 end
 
 #WARNING, using these methods doesn't produce the correct file location in the logs.
