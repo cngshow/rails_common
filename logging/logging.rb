@@ -62,6 +62,34 @@ rf = Logging.appenders.rolling_file(
     truncate: true
 )
 
+error_appender = Logging.appenders.rolling_file(
+    'file',
+    layout: Logging.layouts.pattern(
+        pattern: pattern,
+        color_scheme: 'pretty',
+    ),
+    roll_by: $PROPS['LOG.roll_by'],
+    keep: $PROPS['LOG.keep'].to_i,
+    age: $PROPS['LOG.age'],
+    filename: LOG_HOME + $PROPS['LOG.filename_error'],
+    truncate: true
+)
+
+class ErrorFilter < ::Logging::Filter
+
+  def initialize
+    @levels_hash = Logging::LEVELS.invert.map do |k,v| [k, v.to_sym] end.to_h
+  end
+
+  def allow(event)
+    allowed = @levels_hash[event.level].eql?(:error) || @levels_hash[event.level].eql?(:fatal)
+    allowed ? event : nil
+  end
+
+end
+#error_appender.level = :error
+error_appender.filters=ErrorFilter.new
+
 begin
 
   $log = ::Logging::Logger['MainLogger']
@@ -131,6 +159,10 @@ rescue => ex
   warn ex.backtrace.join("\n")
   warn 'Shutting down the KOMET/PRISME web server!'
   java.lang.System.exit(1)
+end
+
+ALL_LOGGERS.each do |logger|
+  logger.add_appenders error_appender
 end
 
 #WARNING, using these methods doesn't produce the correct file location in the logs.
