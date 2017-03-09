@@ -153,7 +153,7 @@ ALL_LOGGERS = [$log, $alog, $log_rails].reject(&:nil?).freeze
 # the level will be colored differently for each message
 # PrismeLogEvent not visible yet
   unless (File.basename($0) == 'rake')
-    ALL_LOGGERS.each {|e| e.always 'Logging started!' unless e.nil?}
+    ALL_LOGGERS.each {|e| e.always 'Logging started!'}
   end
 rescue => ex
   warn "Logger failed to initialize.  Reason is #{ex.to_s}"
