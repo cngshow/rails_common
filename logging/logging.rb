@@ -62,6 +62,34 @@ rf = Logging.appenders.rolling_file(
     truncate: true
 )
 
+error_appender = Logging.appenders.rolling_file(
+    'file',
+    layout: Logging.layouts.pattern(
+        pattern: pattern,
+        color_scheme: 'pretty',
+    ),
+    roll_by: $PROPS['LOG.roll_by'],
+    keep: $PROPS['LOG.keep'].to_i,
+    age: $PROPS['LOG.age'],
+    filename: LOG_HOME + $PROPS['LOG.filename_error'],
+    truncate: true
+)
+
+class ErrorFilter < ::Logging::Filter
+
+  def initialize
+    @levels_hash = Logging::LEVELS.invert.map do |k,v| [k, v.to_sym] end.to_h
+  end
+
+  def allow(event)
+    allowed = @levels_hash[event.level].eql?(:error) || @levels_hash[event.level].eql?(:fatal)
+    allowed ? event : nil
+  end
+
+end
+#error_appender.level = :error
+error_appender.filters=ErrorFilter.new
+
 begin
 
   $log = ::Logging::Logger['MainLogger']
@@ -69,6 +97,7 @@ begin
 
   $log.add_appenders 'stdout' if ($PROPS['LOG.append_stdout'].eql?('true')) # || $rake (ad that in to see log in vadev jenkins build)
   $log.add_appenders rf
+  #$log.add_appenders error_appender
   $log.level = $PROPS['LOG.level'].downcase.to_sym
 
   unless $PROPS['LOG.filename_rails'].nil?
@@ -119,7 +148,7 @@ begin
     $alog.level = $PROPS['LOG.level'].downcase.to_sym
   end
 
-ALL_LOGGERS = [$log, $alog, $log_rails].freeze
+ALL_LOGGERS = [$log, $alog, $log_rails].reject(&:nil?).freeze
 # these log messages will be nicely colored
 # the level will be colored differently for each message
 # PrismeLogEvent not visible yet
@@ -131,6 +160,10 @@ rescue => ex
   warn ex.backtrace.join("\n")
   warn 'Shutting down the KOMET/PRISME web server!'
   java.lang.System.exit(1)
+end
+
+ALL_LOGGERS.each do |logger|
+  logger.add_appenders error_appender
 end
 
 #WARNING, using these methods doesn't produce the correct file location in the logs.
