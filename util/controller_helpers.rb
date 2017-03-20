@@ -42,10 +42,6 @@ module CommonController
     CommonController.get_rest_connection(url, header)
   end
 
-  def trinidad?
-    root_path.to_s.eql?('/')
-  end
-
   def setup_routes
     original_verbosity = $VERBOSE
     $VERBOSE = nil
