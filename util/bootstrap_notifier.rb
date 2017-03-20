@@ -27,12 +27,16 @@ module BootstrapNotifier
 
   private
 
+  # if we ever see duplicate flash messages then add thread safety to this method
   def flash_msg(message, settings = {})
-    msg = {options: {message: message}, settings: settings.merge!(z_index: 99999)}
+    msg = HashWithIndifferentAccess.new({options: {message: message}, settings: settings.merge!(z_index: 99999)})
+
     if request.xhr?
       hdrs = response[RESPONSE_HEADER] ||= []
       hdrs = JSON.parse(URI.unescape(hdrs)) unless hdrs.empty?
+      hdrs.map! {|m| HashWithIndifferentAccess.new(m) }
       hdrs << msg
+      hdrs.uniq!
       response.headers[RESPONSE_HEADER] = URI.escape(hdrs.to_json)
     else
       _bs_session << msg
