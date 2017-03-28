@@ -3,7 +3,6 @@ module BootstrapNotifier
   INSUFFICIENT_PRIVILEGES = 'Insufficient privileges!<br>Please refresh your browser!'
   ROLE_CHANGE = 'Your roles have changed.<br> Please refresh your browser as soon as possible.'
   AJAX_HDR_ROLES = 'AJAX_HDR_ROLES' # this is used as a key in the response header when verifying that the komet user's roles have not changed
-
   RESPONSE_HEADER = 'X-flash-notifier'
 
   def show_flash
