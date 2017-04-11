@@ -85,7 +85,9 @@ module CommonController
   # get_next_id - generates a unique ID by using the systems nano-second time and date
   # @return [String] returns a unique ID by using the systems nano-second time and date
   def get_next_id
-    return java.lang.System.nanoTime.to_s
+    id = java.lang.System.nanoTime.to_s
+    $log.info("*** get_next_id: " + id)
+    return id
   end
 
   ##
