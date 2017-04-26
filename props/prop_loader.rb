@@ -25,7 +25,7 @@ module PropLoader
     end
   end
 
-  def self.reload!
+  def self.reload
     PropLoader.load_prop_files('./config/props', './lib/rails_common/props')
     $PROPS = PropLoader.props.clone
     $PROPS.freeze
@@ -68,4 +68,4 @@ module PropLoader
   end
 end
 
-PropLoader.reload!
+PropLoader.reload
