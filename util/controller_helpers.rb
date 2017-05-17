@@ -160,9 +160,9 @@ module CommonController
     $isaac_metadata_auxiliary.each_value do |value|
 
       # check to see if the passed id matches the specified id in the metadata
-      if id_type == 'uuid' && value['uuids'].first[:uuid] == id
+      if id_type == 'uuid' && value['uuids'] && value['uuids'].first[:uuid] == id
         found = true
-      elsif id_type == 'sequence' && value['uuids'].first[:translation]['value'].to_s == id.to_s
+      elsif id_type == 'sequence' && value['uuids'] && value['uuids'].first[:translation]['value'].to_s == id.to_s
         found = true
       end
 
