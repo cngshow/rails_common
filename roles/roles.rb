@@ -7,7 +7,8 @@ module Roles
   APPROVER = 'approver'
   DEPLOYMENT_MANAGER = 'deployment_manager'
   VUID_REQUESTOR = 'vuid_requestor'
-  ALL_ROLES = [SUPER_USER, ADMINISTRATOR, READ_ONLY, EDITOR, REVIEWER, APPROVER, DEPLOYMENT_MANAGER, VUID_REQUESTOR]
+  NTRT = 'ntrt'
+  ALL_ROLES = [SUPER_USER, ADMINISTRATOR, READ_ONLY, EDITOR, REVIEWER, APPROVER, DEPLOYMENT_MANAGER, VUID_REQUESTOR, NTRT]
 
   #causes a pundit method called any_administrator? to dynamically show up.
   COMPOSITE_ROLES = {
@@ -16,6 +17,7 @@ module Roles
       can_edit_concept: [SUPER_USER, EDITOR],
       can_deploy: [SUPER_USER, DEPLOYMENT_MANAGER],
       can_get_vuids: [SUPER_USER, VUID_REQUESTOR],
+      can_ntrt: [SUPER_USER, NTRT],
   }
 
   def self.valid_role?(role)
