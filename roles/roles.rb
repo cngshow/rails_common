@@ -10,6 +10,16 @@ module Roles
   NTRT = 'ntrt'
   ALL_ROLES = [SUPER_USER, ADMINISTRATOR, READ_ONLY, EDITOR, REVIEWER, APPROVER, DEPLOYMENT_MANAGER, VUID_REQUESTOR, NTRT]
 
+  ALL_ROLES.each do |role|
+    role.define_singleton_method(:gui_string) do
+      self.split('_').map(&:capitalize).join(' ')
+    end
+  end
+
+  NTRT.define_singleton_method(:gui_string) do
+    'NTRT'
+  end
+
   #causes a pundit method called any_administrator? to dynamically show up.
   COMPOSITE_ROLES = {
       any_administrator: [SUPER_USER, ADMINISTRATOR],
