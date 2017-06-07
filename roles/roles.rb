@@ -20,6 +20,10 @@ module Roles
     'NTRT'
   end
 
+  VUID_REQUESTOR.define_singleton_method(:gui_string) do
+    'VUID Requestor'
+  end
+
   #causes a pundit method called any_administrator? to dynamically show up.
   COMPOSITE_ROLES = {
       any_administrator: [SUPER_USER, ADMINISTRATOR],
