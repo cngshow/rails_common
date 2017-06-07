@@ -9,6 +9,7 @@ module Roles
   VUID_REQUESTOR = 'vuid_requestor'
   NTRT = 'ntrt'
   ALL_ROLES = [SUPER_USER, ADMINISTRATOR, READ_ONLY, EDITOR, REVIEWER, APPROVER, DEPLOYMENT_MANAGER, VUID_REQUESTOR, NTRT]
+  # add the role text to views\admin_user_edit\list.html.erb in PRISME
 
   ALL_ROLES.each do |role|
     role.define_singleton_method(:gui_string) do
