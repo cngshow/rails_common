@@ -1,4 +1,3 @@
-
 <h1>RAILS_COMMON - git submodule</h1>
 We have moved the prop loader and logging code into a git repository at https://github.com/VA-CTT/rails_common.git so that the code can
 be shared with rails_komet and the PRISME project

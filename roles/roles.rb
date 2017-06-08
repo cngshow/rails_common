@@ -7,7 +7,23 @@ module Roles
   APPROVER = 'approver'
   DEPLOYMENT_MANAGER = 'deployment_manager'
   VUID_REQUESTOR = 'vuid_requestor'
-  ALL_ROLES = [SUPER_USER, ADMINISTRATOR, READ_ONLY, EDITOR, REVIEWER, APPROVER, DEPLOYMENT_MANAGER, VUID_REQUESTOR]
+  NTRT = 'ntrt'
+  ALL_ROLES = [SUPER_USER, ADMINISTRATOR, READ_ONLY, EDITOR, REVIEWER, APPROVER, DEPLOYMENT_MANAGER, VUID_REQUESTOR, NTRT]
+  # add the role text to views\admin_user_edit\list.html.erb in PRISME
+
+  ALL_ROLES.each do |role|
+    role.define_singleton_method(:gui_string) do
+      self.split('_').map(&:capitalize).join(' ')
+    end
+  end
+
+  NTRT.define_singleton_method(:gui_string) do
+    'NTRT'
+  end
+
+  VUID_REQUESTOR.define_singleton_method(:gui_string) do
+    'VUID Requestor'
+  end
 
   #causes a pundit method called any_administrator? to dynamically show up.
   COMPOSITE_ROLES = {
@@ -16,6 +32,7 @@ module Roles
       can_edit_concept: [SUPER_USER, EDITOR],
       can_deploy: [SUPER_USER, DEPLOYMENT_MANAGER],
       can_get_vuids: [SUPER_USER, VUID_REQUESTOR],
+      can_ntrt: [SUPER_USER, NTRT],
   }
 
   def self.valid_role?(role)
