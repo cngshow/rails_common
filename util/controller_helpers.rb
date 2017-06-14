@@ -153,7 +153,7 @@ module CommonController
   # @param [String] id - the ID to search for
   # @param [String] id_type - the type of id search for. Options are 'uuid' (default), 'sequence'
   # @param [boolean] return_description - Should the function return the FSN description (true) or the metadata key of the found value (false). Default is true
-  # @return [String] returns either the FSN description or the metadata object of the found value, as specified by return_description. If no entry matches returns nil.
+  # @return [String] returns either the FSN description or the metadata object of the found value, as specified by return_description. If no entry matches returns an empty string.
   def find_metadata_by_id (id, id_type: 'uuid', return_description: true)
 
     # loop through the metadata structure
@@ -174,8 +174,8 @@ module CommonController
       end
     end
 
-    # if nothing was found return nil
-    return nil
+    # if nothing was found return an empty string
+    return ''
   end
 
   ##
