@@ -88,3 +88,29 @@ module PunditDynamicRoles
     end
   end
 end
+
+=begin
+#with dev_box salt
+token = %q{%5B%225-i%3B%5CxD2b%5Cx1F%3DA%7E%5CxBD%5CxB8%5CxCBl%5Cx96T%22%2C+%22%3Ej%5C%22e%5CxD2%3CK%7B%5Cx18%3D%5CxE9%5CxB6%5CxC5%3A%5Cx81T%22%2C+%22%2Fbe%7D%5CxCAzM%7E%5Cx19%3B%5CxFC%5CxE4%5CxA9%5Cx7F%5Cx82T%
+#with test salt.
+token = %q{%5B%22L%5CxE3%5CxE9%5CxFB%5Cx96%5CxCD%5CxD4%5CxC9D%5Cx84%5CxFE%5CxE7%5CxDCM%5Cx11%5Cx93%22%2C+%22G%5CxA4%5CxA2%5CxA5%5Cx96%5Cx93%5Cx80%5Cx8F%5Cx1D%5CxC7%5CxAA%5CxE9%5CxD2%5Ce%5Cx06%5Cx93%22%2C+%22V%5CxAC%5CxE5%5CxBD%5Cx8E%5CxD5%5Cx86%5Cx8A%5Cx1C%5CxC1%5CxBF%5CxBB%5CxBE%5E%5Cx05%5Cx93%22%2C+%22V%5CxA8%5CxEC%5CxB1%5CxD7%5Cx98%5Cx88%5CxDB%5Ct%5CxB3%5CxC8%5CxCC%5CxF9%3Eo%5Cx95%22%5D}
+
+
+url = 'http://localhost:3000/roles/get_roles_by_token.json'
+
+java.net.URLEncoder.encode(token, java.nio.charset.StandardCharsets::UTF_8.name).eql? token #will  be false
+decoded = java.net.URLDecoder.decode(token, java.nio.charset.StandardCharsets::UTF_8.name)
+decoded = java.net.URLDecoder.decode(good, java.nio.charset.StandardCharsets::UTF_8.name)
+java.net.URLEncoder.encode(decoded, java.nio.charset.StandardCharsets::UTF_8.name).eql? token #will be true
+java.net.URLEncoder.encode(un, java.nio.charset.StandardCharsets::UTF_8.name).eql? token #will be true
+
+url_j = java.net.URL.new("#{url}?token=#{token}")
+
+con = url_j.openConnection
+con.setRequestMethod("GET")
+responseCode = con.getResponseCode
+stream = con.getInputStream
+br = java.io.BufferedReader.new(java.io.InputStreamReader.new(stream))
+data = br.readLine
+JSON.parse data
+=end
