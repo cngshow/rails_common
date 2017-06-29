@@ -1,4 +1,4 @@
-#test 2
+#test 3
 module Roles
   SUPER_USER = 'super_user'
   ADMINISTRATOR = 'administrator'
