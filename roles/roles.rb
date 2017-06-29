@@ -1,3 +1,4 @@
+#test
 module Roles
   SUPER_USER = 'super_user'
   ADMINISTRATOR = 'administrator'
