@@ -1,4 +1,7 @@
 module Roles
+
+  #when adding new roles make sure to update the java code in the ISAAC branch too.
+  #UserRole.java and UserRoleConstants.  Both in package gov.vha.isaac.ochre.api
   SUPER_USER = 'super_user'
   ADMINISTRATOR = 'administrator'
   READ_ONLY = 'read_only'
