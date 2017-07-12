@@ -12,6 +12,7 @@ module Roles
   VUID_REQUESTOR = 'vuid_requestor'
   NTRT = 'ntrt'
   ALL_ROLES = [SUPER_USER, ADMINISTRATOR, READ_ONLY, EDITOR, REVIEWER, APPROVER, DEPLOYMENT_MANAGER, VUID_REQUESTOR, NTRT]
+  MODELING_ROLES = [EDITOR, REVIEWER, APPROVER]
   # add the role text to views\admin_user_edit\list.html.erb in PRISME
 
   #causes a pundit method called any_administrator? to dynamically show up.
