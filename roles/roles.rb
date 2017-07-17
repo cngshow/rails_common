@@ -16,7 +16,7 @@ module Roles
   DEPLOYMENT_MANAGER = JPR::DEPLOYMENT_MANAGER.to_s
   VUID_REQUESTOR = JPR::VUID_REQUESTOR.to_s
   NTRT = JPR::NTRT.to_s
-  ALL_ROLES = [SUPER_USER, ADMINISTRATOR, READ_ONLY, EDITOR, REVIEWER, APPROVER, DEPLOYMENT_MANAGER, VUID_REQUESTOR, NTRT]
+  ALL_ROLES = JPR.values.map do |role| role.to_s end
   # add the role text to views\admin_user_edit\list.html.erb in PRISME
   MODELING_ROLES = JPR.values.select do |role| role.getType.eql? JPRT::MODELING end.map do |role| role.to_s end
   #causes a pundit method called any_administrator? to dynamically show up.
