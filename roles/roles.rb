@@ -1,10 +1,10 @@
 module Roles
   java_import 'gov.vha.isaac.ochre.api.PrismeRoleType' do |p,c|
-    'JPRT'
+    'JPRT' #Stands for Java Prisme Role Type
   end
 
   java_import 'gov.vha.isaac.ochre.api.PrismeRole' do |p,c|
-    'JPR'
+    'JPR' #stands for Java Prisme Role
   end
 
   SUPER_USER = JPR::SUPER_USER.to_s
