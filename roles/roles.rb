@@ -24,6 +24,8 @@ module Roles
       any_administrator: [SUPER_USER, ADMINISTRATOR],
       can_add_comments: [SUPER_USER, EDITOR, REVIEWER, APPROVER],
       can_edit_concept: [SUPER_USER, EDITOR],
+      can_review_concept: [SUPER_USER, REVIEWER],
+      can_approve_concept: [SUPER_USER, APPROVER],
       can_deploy: [SUPER_USER, DEPLOYMENT_MANAGER],
       can_get_vuids: [SUPER_USER, VUID_REQUESTOR],
       can_ntrt: [SUPER_USER, NTRT],
