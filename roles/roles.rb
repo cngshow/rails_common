@@ -1,21 +1,31 @@
 module Roles
-  SUPER_USER = 'super_user'
-  ADMINISTRATOR = 'administrator'
-  READ_ONLY = 'read_only'
-  EDITOR = 'editor'
-  REVIEWER = 'reviewer'
-  APPROVER = 'approver'
-  DEPLOYMENT_MANAGER = 'deployment_manager'
-  VUID_REQUESTOR = 'vuid_requestor'
-  NTRT = 'ntrt'
-  ALL_ROLES = [SUPER_USER, ADMINISTRATOR, READ_ONLY, EDITOR, REVIEWER, APPROVER, DEPLOYMENT_MANAGER, VUID_REQUESTOR, NTRT]
-  # add the role text to views\admin_user_edit\list.html.erb in PRISME
+  java_import 'gov.vha.isaac.ochre.api.PrismeRoleType' do |p,c|
+    'JPRT' #Stands for Java Prisme Role Type
+  end
 
+  java_import 'gov.vha.isaac.ochre.api.PrismeRole' do |p,c|
+    'JPR' #stands for Java Prisme Role
+  end
+
+  SUPER_USER = JPR::SUPER_USER.to_s
+  ADMINISTRATOR = JPR::ADMINISTRATOR.to_s
+  READ_ONLY = JPR::READ_ONLY.to_s
+  EDITOR = JPR::EDITOR.to_s
+  REVIEWER = JPR::REVIEWER.to_s
+  APPROVER = JPR::APPROVER.to_s
+  DEPLOYMENT_MANAGER = JPR::DEPLOYMENT_MANAGER.to_s
+  VUID_REQUESTOR = JPR::VUID_REQUESTOR.to_s
+  NTRT = JPR::NTRT.to_s
+  ALL_ROLES = JPR.values.map do |role| role.to_s end
+  # add the role text to views\admin_user_edit\list.html.erb in PRISME
+  MODELING_ROLES = JPR.values.select do |role| role.getType.eql? JPRT::MODELING end.map do |role| role.to_s end
   #causes a pundit method called any_administrator? to dynamically show up.
   COMPOSITE_ROLES = {
       any_administrator: [SUPER_USER, ADMINISTRATOR],
       can_add_comments: [SUPER_USER, EDITOR, REVIEWER, APPROVER],
       can_edit_concept: [SUPER_USER, EDITOR],
+      can_review_concept: [SUPER_USER, REVIEWER],
+      can_approve_concept: [SUPER_USER, APPROVER],
       can_deploy: [SUPER_USER, DEPLOYMENT_MANAGER],
       can_get_vuids: [SUPER_USER, VUID_REQUESTOR],
       can_ntrt: [SUPER_USER, NTRT],
