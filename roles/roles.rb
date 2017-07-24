@@ -1,6 +1,6 @@
 module Roles
 
-  require './lib/jars/ochre-api.jar' #komet needs this
+  require './lib/jars/ochre-api.jar'
 
   java_import 'gov.vha.isaac.ochre.api.PrismeRoleType' do |p,c|
     'JPRT' #Stands for Java Prisme Role Type
