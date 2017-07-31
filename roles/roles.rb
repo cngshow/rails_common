@@ -10,6 +10,7 @@ module Roles
     'JPR' #stands for Java Prisme Role
   end
 
+  #Only add in roles of a type other than non user.
   SUPER_USER = JPR::SUPER_USER.to_s
   ADMINISTRATOR = JPR::ADMINISTRATOR.to_s
   READ_ONLY = JPR::READ_ONLY.to_s
@@ -19,7 +20,7 @@ module Roles
   DEPLOYMENT_MANAGER = JPR::DEPLOYMENT_MANAGER.to_s
   VUID_REQUESTOR = JPR::VUID_REQUESTOR.to_s
   NTRT = JPR::NTRT.to_s
-  ALL_ROLES = JPR.values.map do |role| role.to_s end
+  ALL_ROLES = JPR.values.select do |role| role.getType != JPRT::NON_USER  end.map do |role| role.to_s end
   # add the role text to views\admin_user_edit\list.html.erb in PRISME
   MODELING_ROLES = JPR.values.select do |role| role.getType.eql? JPRT::MODELING end.map do |role| role.to_s end
   #causes a pundit method called any_administrator? to dynamically show up.
