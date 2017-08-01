@@ -41,11 +41,11 @@ module Roles
   def self.gui_string(role)
     case role
       when NTRT_USER
-        'NTRT user'
+        'NTRT User'
       when NTRT_ADMIN
-        'NTRT admin'
+        'NTRT Admin'
       when NTRT_STAFF
-        'NTRT staff'
+        'NTRT Staff'
       when VUID_REQUESTOR
         'VUID Requestor'
       else
