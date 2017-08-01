@@ -19,10 +19,13 @@ module Roles
   APPROVER = JPR::APPROVER.to_s
   DEPLOYMENT_MANAGER = JPR::DEPLOYMENT_MANAGER.to_s
   VUID_REQUESTOR = JPR::VUID_REQUESTOR.to_s
-  NTRT = JPR::NTRT.to_s
+  NTRT_USER = JPR::NTRT_USER.to_s
+  NTRT_STAFF = JPR::NTRT_STAFF.to_s
+  NTRT_ADMIN = JPR::NTRT_ADMIN.to_s
   ALL_ROLES = JPR.values.select do |role| role.getType != JPRT::NON_USER  end.map do |role| role.to_s end
   # add the role text to views\admin_user_edit\list.html.erb in PRISME
   MODELING_ROLES = JPR.values.select do |role| role.getType.eql? JPRT::MODELING end.map do |role| role.to_s end
+  NTRT_ROLES = [NTRT_STAFF, NTRT_ADMIN, NTRT_USER]
   #causes a pundit method called any_administrator? to dynamically show up.
   COMPOSITE_ROLES = {
       any_administrator: [SUPER_USER, ADMINISTRATOR],
@@ -32,13 +35,17 @@ module Roles
       can_approve_concept: [SUPER_USER, APPROVER],
       can_deploy: [SUPER_USER, DEPLOYMENT_MANAGER],
       can_get_vuids: [SUPER_USER, VUID_REQUESTOR],
-      can_ntrt: [SUPER_USER, NTRT],
+      can_ntrt: [SUPER_USER, NTRT_ROLES].flatten,
   }
 
   def self.gui_string(role)
     case role
-      when NTRT
-        'NTRT'
+      when NTRT_USER
+        'NTRT user'
+      when NTRT_ADMIN
+        'NTRT admin'
+      when NTRT_STAFF
+        'NTRT staff'
       when VUID_REQUESTOR
         'VUID Requestor'
       else
