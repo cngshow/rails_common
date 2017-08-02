@@ -4,9 +4,14 @@ namespace :devops do
   ENV['NODE_ENV'] = Rails.env
   cleanup = 'Cleanup react on rails'
   setup = 'Set up react on rails'
+
+  task :custom_environment  do
+    # special initialization stuff here
+    # or call another initializer script
+  end
+
   desc cleanup
-  task :cleanup_react do
-    $react_build = true
+  task :cleanup_react => :custom_environment do
     w_d = './app/assets/webpack/'
     n_m = './client/node_modules'
     begin
@@ -24,11 +29,10 @@ namespace :devops do
   end
 
   desc setup
-  task :set_up_react do
+  task :set_up_react  => :custom_environment do
     Rake::Task['devops:cleanup_react'].invoke
     Dir.chdir('./client') do
       sh 'yarn install --ignore-engines' #https://github.com/akveo/ng2-admin/issues/717
-      Rake::Task['react_on_rails:locale'].invoke
     end
 
     if (Rails.env.development?)
