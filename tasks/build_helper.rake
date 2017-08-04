@@ -35,24 +35,16 @@ namespace :devops do
       sh 'yarn install --ignore-engines' #https://github.com/akveo/ng2-admin/issues/717
     end
 
-    if (Rails.env.development?)
-      puts 'Running: yarn run build:development'
+      puts "Running: yarn run build:#{Rails.env}"
       Dir.chdir('./client') do
-        sh 'yarn run build:development'
+        sh "yarn run build:#{Rails.env}"
       end
       puts 'Done..'
-    else
-      Dir.chdir('./client') do
-        puts 'Running: yarn run build:production'
-        sh 'yarn run build:production'
-        puts 'Done..'
-      end
       #unix land, we assume we are on the build server
       #rake react_on_rails:assets:webpack
  #     puts 'Running: react_on_rails:assets:webpack'
 #      Rake::Task['react_on_rails:assets:webpack'].invoke
      # puts 'Done..'
-    end
   end
 
   desc cleanup
