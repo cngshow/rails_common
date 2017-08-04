@@ -20,6 +20,7 @@ module Roles
   DEPLOYMENT_MANAGER = JPR::DEPLOYMENT_MANAGER.to_s
   VUID_REQUESTOR = JPR::VUID_REQUESTOR.to_s
   NTRT_USER = JPR::NTRT_USER.to_s
+  #new ntrt roles
   NTRT_STAFF = JPR::NTRT_STAFF.to_s
   NTRT_ADMIN = JPR::NTRT_ADMIN.to_s
   ALL_ROLES = JPR.values.select do |role| role.getType != JPRT::NON_USER  end.map do |role| role.to_s end
