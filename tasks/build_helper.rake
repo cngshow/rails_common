@@ -32,7 +32,7 @@ namespace :devops do
   task :set_up_react  => :custom_environment do
     Rake::Task['devops:cleanup_react'].invoke
     Dir.chdir('./client') do
-      sh 'yarn install --ignore-engines' #https://github.com/akveo/ng2-admin/issues/717
+      sh 'yarn install --frozen-lockfile --ignore-engines' #https://github.com/akveo/ng2-admin/issues/717
     end
 
       puts "Running: yarn run build:#{Rails.env}"
