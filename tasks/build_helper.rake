@@ -42,9 +42,9 @@ namespace :devops do
       puts 'Done..'
       #unix land, we assume we are on the build server
       #rake react_on_rails:assets:webpack
- #     puts 'Running: react_on_rails:assets:webpack'
-#      Rake::Task['react_on_rails:assets:webpack'].invoke
-     # puts 'Done..'
+      #puts 'Running: react_on_rails:assets:webpack'
+      #Rake::Task['react_on_rails:assets:webpack'].invoke
+      #puts 'Done..'
   end
 
   desc cleanup
