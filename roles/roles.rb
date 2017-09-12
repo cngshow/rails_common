@@ -1,5 +1,5 @@
 module Roles
-#force creation of r6 branch
+
   require './lib/jars/ochre-api.jar'
 
   java_import 'gov.vha.isaac.ochre.api.PrismeRoleType' do |p,c|
