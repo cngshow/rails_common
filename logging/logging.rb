@@ -1,6 +1,6 @@
 require 'logging'
 require 'fileutils'
-
+#
 #if nil we are in trinidad
 CATALINA_HOME = java.lang.System.properties['catalina.home']
 subdir = (File.open('../context.txt').read.reverse.chop.reverse + '/') rescue ''
